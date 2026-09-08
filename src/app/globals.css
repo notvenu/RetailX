@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #fcfcfb;
+  --color-panel: #f3f4f6;
+  --color-panel-deep: #eceef1;
+  --color-ink: #1d2433;
+  --color-ink-soft: #4b5565;
+  --color-ink-faint: #8a94a6;
+  --color-rule: #e5e7eb;
+  --color-rule-strong: #d3d7de;
+
+  --color-accent: #3538cd;
+  --color-accent-hover: #2c2fb3;
+  --color-accent-wash: #eef0fc;
+
+  --color-good: #067647;
+  --color-good-wash: #ecfdf3;
+  --color-warn: #b54708;
+  --color-warn-wash: #fef6ee;
+  --color-bad: #b42318;
+  --color-bad-wash: #fef3f2;
+
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-overlay: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 12px rgba(16, 24, 40, 0.1);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1, "cv05" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-accent-wash);
+  color: var(--color-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Slim, palette-tinted scrollbars for the operate surface */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-rule-strong);
+  border: 3px solid var(--color-paper);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-faint);
+}
+
+/* Tabular, right-aligned numeric cells everywhere */
+.num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@keyframes rx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
