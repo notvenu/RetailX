@@ -14,7 +14,7 @@ export default async function HrPage() {
     <>
       <PageHeader
         title="People & payroll"
-        meta={`${ORG.name} · ${PAYROLL_RUN.headcount} employees · sample data`}
+        meta={`${ORG.name} · ${PAYROLL_RUN.headcount} employees`}
       />
 
       <div className="mt-6">

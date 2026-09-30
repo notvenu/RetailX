@@ -17,7 +17,7 @@ export default function AnalyticsPage() {
     <>
       <PageHeader
         title="Analytics"
-        meta={`${ORG.name} · ${KPIS.length} KPIs · recomputed ${ORG.asOf} · sample data`}
+        meta={`${ORG.name} · ${KPIS.length} KPIs · recomputed ${ORG.asOf}`}
       />
 
       <div className="mt-6">
@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
         />
       </Section>
 
-      <Section title="Branch health">
+      <Section title="Store health">
         <DataTable
           getKey={(r) => r.id}
           rows={BRANCHES}
@@ -88,23 +88,22 @@ export default function AnalyticsPage() {
         />
       </Section>
 
-      <Section title="Anomaly log" meta="expected values from the forecasting layer">
+      <Section title="Anomaly log" meta="expected = same weekday on the month's other ordinary days">
         <DataTable
           getKey={(_, i) => i}
           rows={ANOMALIES}
           columns={[
             { key: "metric", header: "Metric", render: (r) => <span className="font-medium">{r.metric}</span> },
-            { key: "branch", header: "Branch", render: (r) => r.branch },
             { key: "date", header: "Detected", render: (r) => <span className="text-ink-soft">{r.date}</span> },
             { key: "actual", header: "Actual", align: "right", render: (r) => r.actual },
             { key: "expected", header: "Expected", align: "right", render: (r) => <span className="text-ink-soft">{r.expected}</span> },
             { key: "dev", header: "Deviation", align: "right", render: (r) => r.deviation },
             { key: "sev", header: "Severity", align: "right", render: (r) => <StatusPill>{r.severity}</StatusPill> },
-            { key: "status", header: "Status", align: "right", render: (r) => <StatusPill>{r.status}</StatusPill> },
+            { key: "cause", header: "Day-book note", render: (r) => <span className="text-ink-soft">{r.cause || "—"}</span> },
           ]}
         />
         <Note>
-          Anomalies compare each metric against its forecast band. Resolved items stay in the log for audit.{" "}
+          Each daily metric is compared with its median on the same weekday on the month's other ordinary days, and flagged when the gap is unusually large for the store (robust z-score). Festival days are expected to be unusual and are never flagged. The note is what the store recorded in its day book.{" "}
           <Link href="/forecasting" className="font-medium text-accent hover:underline">See the forecasting model →</Link>
         </Note>
       </Section>

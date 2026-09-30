@@ -5,7 +5,7 @@ import { Sparkline, LineChart } from "@/components/charts";
 import { kpi, kpiDeltas } from "@/lib/kpi";
 import { money, moneyCompact, pct } from "@/lib/format";
 import {
-  ORG, BRANCHES, PNL, derive, SUMMARY, REVENUE_FORECAST, ANOMALIES, ACTIVITY,
+  ORG, PNL, derive, SUMMARY, REVENUE_FORECAST, ANOMALIES, ACTIVITY,
 } from "@/lib/mock";
 
 const cur = PNL[PNL.length - 1];
@@ -42,7 +42,7 @@ export default async function Overview({
     <>
       <PageHeader
         title="Overview"
-        meta={`${ORG.name} · ${BRANCHES.length} branches · month ending ${ORG.asOf}`}
+        meta={`${ORG.name} · ${ORG.location} · month ending ${ORG.asOf}`}
         actions={
           <Link
             href="/branch-evaluation"
@@ -81,7 +81,7 @@ export default async function Overview({
           <LineChart points={REVENUE_FORECAST} showBand showPredicted />
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-ink-soft">
             <Legend swatch="line-accent" label="Actual revenue" />
-            <Legend swatch="line-dash" label="Forecast (Holt–Winters)" />
+            <Legend swatch="line-dash" label="Forecast (Holt, damped trend)" />
             <Legend swatch="band" label="90% prediction interval" />
           </div>
         </Section>
@@ -89,7 +89,7 @@ export default async function Overview({
         <Section title="Needs attention" className="mt-0 first:mt-0">
           <ul className="divide-y divide-rule">
             {ANOMALIES.filter((a) => a.status !== "Resolved").map((a) => (
-              <li key={a.metric + a.branch} className="flex items-start justify-between gap-3 py-2.5">
+              <li key={a.metric + a.branch + a.date} className="flex items-start justify-between gap-3 py-2.5">
                 <div>
                   <p className="text-[0.82rem] font-medium text-ink">{a.metric}</p>
                   <p className="text-[0.74rem] text-ink-soft">

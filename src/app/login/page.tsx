@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { login, type LoginState } from "./actions";
+import Link from "next/link";
 import { MOCK_USERS } from "@/lib/users";
 
 const GROUPS = [
@@ -24,9 +25,9 @@ export default function LoginPage() {
       <div className="grid w-full max-w-4xl overflow-hidden rounded-[6px] border border-rule bg-white shadow-overlay lg:grid-cols-[1.05fr_1fr]">
         {/* report cover */}
         <div className="hidden flex-col bg-panel p-10 lg:flex">
-          <span className="text-[1.4rem] font-bold tracking-[-0.03em] text-ink">
+          <Link href="/" className="self-start text-[1.4rem] font-bold tracking-[-0.03em] text-ink">
             Retail<span className="text-accent">X</span>
-          </span>
+          </Link>
           <h1 className="mt-6 text-[1.35rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
             The SME management ledger that reads its own numbers.
           </h1>
@@ -49,6 +50,9 @@ export default function LoginPage() {
 
         {/* sign in */}
         <div className="p-8 sm:p-10">
+          <Link href="/" className="mb-6 inline-block text-[1.2rem] font-bold tracking-[-0.03em] text-ink lg:hidden">
+            Retail<span className="text-accent">X</span>
+          </Link>
           <h2 className="text-[1.1rem] font-semibold tracking-[-0.01em] text-ink">
             Sign in
           </h2>

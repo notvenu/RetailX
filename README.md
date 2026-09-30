@@ -47,6 +47,27 @@ plus the assumptions that move the decision most (`src/lib/branch.ts`).
 node src/lib/branch.ts   # self-check on the financial engine
 ```
 
+## Models
+
+The demo business is **Nandan Provisions**, an illustrative single-store supermarket on Baner Road,
+Pune, with books closed on 30 Sep 2026. `ml/data/` holds them: `monthly_closes.csv` (Oct 2025 – Sep
+2026), `store_daily.csv` (September day book, with incidents noted), `sku_daily.csv` (tracked
+products, authored by `ml/data/make_sku_daily.py` from the day book) and `category_month.csv`.
+Staff, customers, suppliers, orders and invoices are entered in `src/lib/mock.ts`.
+
+`ml/retailx.py` reads the books and writes `src/data/ml.json`, which `src/lib/mock.ts` reads: the P&L,
+expense mix, KPI series, revenue forecast, anomaly log and 16-day product demand with order quantities.
+It refuses to run if the September close and the day book disagree. Rerun it whenever the data changes.
+
+```bash
+pip install pandas numpy statsmodels
+python ml/data/make_sku_daily.py   # after editing store_daily.csv
+python ml/retailx.py      # books -> src/data/ml.json, scores -> ml/models/metrics.json
+pip install scikit-learn lightgbm joblib kaggle   # only for the public benchmarks below
+python ml/download.py     # optional: public benchmark datasets (Kaggle token + accepted competition rules)
+python ml/train.py        # optional: same methods on Favorita, M5, Rossmann, TFI
+```
+
 ## Design
 
 See `DESIGN.md` and `.impeccable/surfaces/app.md`.

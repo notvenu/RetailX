@@ -265,11 +265,11 @@ export function SalesInvoices({ role }: RoleProp) {
 
 export function InventoryProducts({ role }: RoleProp) {
   type Product = (typeof PRODUCTS)[number];
-  const cats = ["Staples", "Beverages", "Snacks", "Home care", "Dairy", "Spices"];
+  const cats = ["Staples and grains", "Edible oil and ghee", "Dairy and bakery", "Snacks and beverages", "Personal and home care", "Dry fruits and puja", "Fruits and vegetables", "Other"];
   return (
     <CollectionPanel<Product>
       title="Stock status by SKU"
-      meta="reorder logic: on-hand vs reorder level"
+      meta="16-day demand forecast · order covers it plus 95% safety stock"
       storageKey="products"
       seed={PRODUCTS}
       role={role}
@@ -281,8 +281,8 @@ export function InventoryProducts({ role }: RoleProp) {
         { name: "category", label: "Category", type: "select", options: cats, required: true },
         { name: "onHand", label: "On hand", type: "number", required: true },
         { name: "reorder", label: "Reorder at", type: "number", required: true },
-        { name: "units90d", label: "Units sold 90d", type: "number" },
-        { name: "revenue90d", label: "Revenue 90d", type: "money" },
+        { name: "units30d", label: "Units sold, 30 days", type: "number" },
+        { name: "revenue30d", label: "Revenue, 30 days", type: "money" },
         { name: "marginPct", label: "Margin %", type: "number" },
       ]}
       build={(v) => ({
@@ -291,18 +291,22 @@ export function InventoryProducts({ role }: RoleProp) {
         category: v.category,
         onHand: Number(v.onHand) || 0,
         reorder: Number(v.reorder) || 0,
-        units90d: Number(v.units90d) || 0,
-        revenue90d: Number(v.revenue90d) || 0,
+        units30d: Number(v.units30d) || 0,
+        revenue30d: Number(v.revenue30d) || 0,
         marginPct: Number(v.marginPct) || 0,
+        forecast16d: null, // no sales history yet
+        suggestedOrder: null,
       })}
       columns={[
-        { key: "sku", header: "SKU", render: (r) => <span className="font-mono text-[0.78rem] text-ink-soft">{r.sku}</span> },
+        { key: "sku", header: "SKU", render: (r) => <span className="whitespace-nowrap font-mono text-[0.78rem] text-ink-soft">{r.sku}</span> },
         { key: "name", header: "Product", render: (r) => <span className="font-medium">{r.name}</span> },
         { key: "cat", header: "Category", render: (r) => <span className="text-ink-soft">{r.category}</span> },
         { key: "onhand", header: "On hand", align: "right", render: (r) => num(r.onHand) },
         { key: "reorder", header: "Reorder at", align: "right", render: (r) => <span className="text-ink-soft">{num(r.reorder)}</span> },
-        { key: "units", header: "Units 90d", align: "right", render: (r) => num(r.units90d) },
-        { key: "rev", header: "Revenue 90d", align: "right", render: (r) => money(r.revenue90d) },
+        { key: "fc", header: "Demand 16d", align: "right", render: (r) => (r.forecast16d == null ? <span className="text-ink-faint">—</span> : num(r.forecast16d)) },
+        { key: "order", header: "Order to cover", align: "right", render: (r) => (r.suggestedOrder == null ? <span className="text-ink-faint">—</span> : <span className="font-medium">{num(r.suggestedOrder)}</span>) },
+        { key: "units", header: "Units 30d", align: "right", render: (r) => num(r.units30d) },
+        { key: "rev", header: "Revenue 30d", align: "right", render: (r) => money(r.revenue30d) },
         { key: "margin", header: "Margin", align: "right", render: (r) => pct(r.marginPct) },
         { key: "status", header: "Status", align: "right", render: (r) => <StatusPill>{stockStatus(r)}</StatusPill> },
       ]}
@@ -366,7 +370,7 @@ export function ExpensesPanel({ role }: RoleProp) {
         { name: "date", label: "Date", type: "date" },
         { name: "category", label: "Category", type: "select", options: EXPENSES.map((e) => e.category), required: true },
         { name: "vendor", label: "Vendor / payee", type: "text", required: true },
-        { name: "branch", label: "Branch", type: "select", options: ["All branches", ...branchNames], required: true },
+        { name: "branch", label: "Branch", type: "select", options: branchNames, required: true },
         { name: "method", label: "Paid via", type: "select", options: ["Cash", "Bank", "Card", "UPI"] },
         { name: "amount", label: "Amount", type: "money", required: true },
       ]}

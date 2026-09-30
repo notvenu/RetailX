@@ -71,3 +71,23 @@ choreography, no decorative motion.
 
 See `.impeccable/surfaces/app.md`. The concept-seed direction tournament was skipped deliberately
 for this scoped internal Operate build; the world was committed inline.
+
+## Public site (`src/app/(site)/`, Persuade)
+
+Same tokens, type and hairline grammar as the app; scale moves up. Text only, no figures or
+sample data (owner's call). Brief: `.impeccable/surfaces/src-app-site-page-tsx.md`.
+
+- Routes: `/` Home, `/features`, `/how-it-works`, `/about` (contact). Public in `src/proxy.ts`;
+  the app's home is `/overview`; sign-in lands there.
+- Form: an annual report. Statement h1 `clamp(2.6rem,5.6vw,4.1rem)`/600/`-0.042em`; inner-page
+  h1 `clamp(2.3rem,4.6vw,3.4rem)`; chapter h2 `1.65rem` on a `rule-strong` hairline with a
+  7/12 standfirst; body `0.9–1.1rem` in `ink-soft` (never `ink-faint`, which is 3:1).
+- Components (`src/components/site.tsx`): `SiteHeader`/`SiteFooter` (nav in `site-nav.tsx`,
+  native `<details>` menu below `md`), `PageIntro`, `Chapter`, `RuledList` (2px ink top rule,
+  hairline rows), `NumberedNote` (light numeral in the margin, `#note-n` anchors),
+  `Chain` (five ruled steps), `MODULES` copy shared by Home and Features, `Actions`
+  (indigo "Open the demo" + arrow text link). Contact: `contact-form.tsx` opens a mailto;
+  `CONTACT_EMAIL` is a placeholder.
+- Motion: `.rx-post` draws the Home ruled list's rules in once (70 ms stagger, expo-out);
+  `.rx-note:target` washes a cited note once. Both off under reduced motion.
+- Indigo stays for actions, links and the current nav item only.

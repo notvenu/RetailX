@@ -3,7 +3,7 @@ import { Building2, ArrowRight } from "lucide-react";
 import { PageHeader, Section, Figure, FigureRow, StatusPill } from "@/components/ui";
 import { RECOMMENDATIONS, SUMMARY, ORG } from "@/lib/mock";
 import { kpi } from "@/lib/kpi";
-import { pct } from "@/lib/format";
+import { moneyCompact, pct } from "@/lib/format";
 
 const open = RECOMMENDATIONS.length;
 
@@ -12,14 +12,14 @@ export default function DecisionSupportPage() {
     <>
       <PageHeader
         title="Decision support"
-        meta={`${ORG.name} · prescriptive analytics · sample data`}
+        meta={`${ORG.name} · prescriptive analytics`}
       />
 
       <div className="mt-6">
         <FigureRow>
           <Figure label="Break-even achievement" value={pct(SUMMARY.breakEvenAchievement)} deltas={[{ value: SUMMARY.breakEvenAchievement - 100, label: "above break-even", suffix: "pts" }]} />
           <Figure label={kpi("roce").label} value={kpi("roce").display} deltas={[{ value: kpi("roce").value - kpi("roce").target, label: "vs target", suffix: "pts" }]} />
-          <Figure label="Portfolio payback" value={`${SUMMARY.paybackMonthsPortfolio} mo`} higherIsBetter={false} />
+          <Figure label="Cash on hand" value={moneyCompact(SUMMARY.cashOnHand)} />
           <Figure label="Open recommendations" value={String(open)} />
         </FigureRow>
       </div>

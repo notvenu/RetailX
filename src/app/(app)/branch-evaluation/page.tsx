@@ -61,13 +61,13 @@ export default function BranchEvaluationPage() {
     <>
       <PageHeader
         title="New branch opening evaluation"
-        meta="Flagship decision-support model · all figures are sample assumptions"
+        meta="Nandan Provisions · proposal for a second store"
         actions={
           <button
             onClick={() => setInputs(DEFAULT_INPUTS)}
             className="inline-flex items-center gap-1.5 rounded-[4px] border border-rule-strong px-3 py-1.5 text-[0.8rem] font-medium text-ink-soft transition-colors hover:border-ink-faint hover:text-ink"
           >
-            <RotateCcw className="size-3.5" /> Reset to sample
+            <RotateCcw className="size-3.5" /> Reset to proposal
           </button>
         }
       />

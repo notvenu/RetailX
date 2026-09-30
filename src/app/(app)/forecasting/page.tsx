@@ -12,7 +12,7 @@ export default function ForecastingPage() {
     <>
       <PageHeader
         title="Forecasting"
-        meta={`${ORG.name} · ${FORECAST_MODEL.name} · sample data`}
+        meta={`${ORG.name} · ${FORECAST_MODEL.name}`}
       />
 
       <div className="mt-6">
@@ -57,7 +57,7 @@ export default function ForecastingPage() {
           <Note>
             Rolling-origin validation retrains at each fold and scores the next month only, so the error
             estimate reflects true forward performance. A near-zero bias means the model is not
-            systematically over- or under-forecasting.
+            systematically over- or under-forecasting. {FORECAST_MODEL.limits}
           </Note>
         </Section>
 

@@ -85,3 +85,38 @@ body {
     transform: none;
   }
 }
+
+/* Public site. The highlights register posts once on load: each rule draws, then its figure settles. */
+@keyframes rx-rule {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+@keyframes rx-settle {
+  from { opacity: 0.2; transform: translateY(3px); filter: blur(2px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.rx-post .rx-post-rule {
+  transform-origin: left;
+  animation: rx-rule 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 70ms + 120ms);
+}
+.rx-post .rx-post-value {
+  animation: rx-settle 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 70ms + 260ms);
+}
+
+/* Following a citation ("Note 5") marks the note it lands on. */
+@keyframes rx-cite {
+  from { background: var(--color-accent-wash); }
+  to { background: transparent; }
+}
+.rx-note:target { animation: rx-cite 1.8s ease-out; }
+.rx-note:target .rx-note-n { color: var(--color-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rx-post .rx-post-rule,
+  .rx-post .rx-post-value,
+  .rx-note:target { animation: none; }
+}
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

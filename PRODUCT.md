@@ -26,7 +26,7 @@ Not a dashboard bolted onto spreadsheets, and not a clone of a large enterprise 
 
 ## Operating Context
 
-Back-office use on desktop/laptop. Role-based access gates Finance, HR and Decision Support. Periods are monthly; figures are reported against target and previous period. Currency is per-organization. The prototype ships with one seeded organization and a small set of branches.
+Back-office use on desktop/laptop. Role-based access gates Finance, HR and Decision Support. Periods are monthly; figures are reported against target and previous period. Currency is per-organization. The prototype ships with one seeded single-store organization, with a second store under evaluation.
 
 ## Capabilities and Constraints
 
@@ -40,7 +40,7 @@ Back-office use on desktop/laptop. Role-based access gates Finance, HR and Decis
 ## Evidence on Hand
 
 - Source brief: `RetailX_First_Project_Review (1).pdf` (project overview, modules, KPI framework, flagship evaluation spec, DB schema, system design).
-- No real customer, financial or benchmark data. All figures in the build are synthetic fixtures and must be labelled as sample data; do not present them as real business results.
+- The seeded organisation is Nandan Provisions, an illustrative single-store neighbourhood supermarket (Baner Road, Pune; Udyam micro enterprise) with realistic, hand-authored books for September 2026 in detail and monthly closes from October 2025 (`ml/data/`). It is not a real company: the app carries one quiet "Illustrative business" note in the shell rather than "sample data" on every page. Do not invent claims beyond these books.
 
 ## Product Principles
 

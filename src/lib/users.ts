@@ -14,7 +14,7 @@ export type MockUser = {
 export const MOCK_USERS: MockUser[] = [
   {
     id: "u_owner",
-    name: "Asha Rao",
+    name: "Anand Kulkarni",
     email: "owner@retailx.test",
     password: "retailx",
     role: "Owner",
@@ -22,7 +22,7 @@ export const MOCK_USERS: MockUser[] = [
   },
   {
     id: "u_manager",
-    name: "Devan Mehta",
+    name: "Sneha Patil",
     email: "manager@retailx.test",
     password: "retailx",
     role: "Manager",
@@ -30,7 +30,7 @@ export const MOCK_USERS: MockUser[] = [
   },
   {
     id: "u_accountant",
-    name: "Priya Nair",
+    name: "Rahul Joshi",
     email: "accountant@retailx.test",
     password: "retailx",
     role: "Accountant",
@@ -38,7 +38,7 @@ export const MOCK_USERS: MockUser[] = [
   },
   {
     id: "u_employee",
-    name: "Sam Fernandes",
+    name: "Ganesh Pawar",
     email: "employee@retailx.test",
     password: "retailx",
     role: "Employee",

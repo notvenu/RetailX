@@ -5,6 +5,7 @@ export const ALL_ROLES: Role[] = ["Owner", "Manager", "Accountant", "Employee"];
 /** Route prefix → roles allowed. Longest matching prefix wins. */
 export const ACCESS: Record<string, Role[]> = {
   "/": ALL_ROLES,
+  "/overview": ALL_ROLES,
   "/finance": ["Owner", "Manager", "Accountant"],
   "/sales": ALL_ROLES,
   "/inventory": ALL_ROLES,

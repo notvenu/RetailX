@@ -4,7 +4,7 @@ import { Sparkline, BarComposition } from "@/components/charts";
 import { SalesInvoices } from "@/components/CollectionPanel";
 import { kpi, kpiDeltas } from "@/lib/kpi";
 import { money, moneyCompact, pct } from "@/lib/format";
-import { CUSTOMERS, BRANCH_MONTH, ORG } from "@/lib/mock";
+import { CUSTOMERS, CATEGORY_MONTH, ORG } from "@/lib/mock";
 
 const outstanding = CUSTOMERS.reduce((s, c) => s + c.outstanding, 0);
 
@@ -15,7 +15,7 @@ export default async function SalesPage() {
     <>
       <PageHeader
         title="Sales & CRM"
-        meta={`${ORG.name} · month ending ${ORG.asOf} · sample data`}
+        meta={`${ORG.name} · month ending ${ORG.asOf}`}
       />
 
       <div className="mt-6">
@@ -28,7 +28,7 @@ export default async function SalesPage() {
       </div>
 
       <Section title="Revenue by branch — current month">
-        <BarComposition items={BRANCH_MONTH.map((b) => ({ label: b.branch, value: b.revenue, hint: pct(b.grossMarginPct) + " GM" }))} />
+        <BarComposition items={CATEGORY_MONTH.map((c) => ({ label: c.category, value: c.revenue, hint: pct(c.grossMarginPct) + " GM" }))} />
       </Section>
 
       <SalesInvoices role={session?.user.role} />

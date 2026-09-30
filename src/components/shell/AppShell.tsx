@@ -72,9 +72,7 @@ export function AppShell({
                 <ul>
                   {items.map((item) => {
                     const active =
-                      item.href === "/"
-                        ? pathname === "/"
-                        : pathname.startsWith(item.href);
+                      pathname === item.href || pathname.startsWith(item.href + "/");
                     const Icon = item.icon;
                     return (
                       <li key={item.href} className="relative">
@@ -106,7 +104,7 @@ export function AppShell({
         </nav>
 
         <p className="border-t border-rule px-5 py-3 text-[0.68rem] leading-relaxed text-ink-faint">
-          Prototype · all figures are sample data
+          Illustrative business · not a real company
         </p>
       </aside>
 

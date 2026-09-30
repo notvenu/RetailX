@@ -46,3 +46,8 @@ next-env.d.ts
 _state.json
 _shots.mjs
 .impeccable/review/
+
+# ml downloads + trained models
+ml/raw/
+ml/models/
+.playwright-mcp/

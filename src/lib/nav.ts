@@ -23,7 +23,7 @@ export type NavItem = {
 };
 
 export const NAV: NavItem[] = [
-  { href: "/", label: "Overview", icon: LayoutGrid, group: "Overview", roles: ACCESS["/"] },
+  { href: "/overview", label: "Overview", icon: LayoutGrid, group: "Overview", roles: ACCESS["/overview"] },
   { href: "/finance", label: "Finance", icon: Landmark, group: "Operations", roles: ACCESS["/finance"] },
   { href: "/sales", label: "Sales & CRM", icon: ShoppingBag, group: "Operations", roles: ACCESS["/sales"] },
   { href: "/inventory", label: "Inventory", icon: Boxes, group: "Operations", roles: ACCESS["/inventory"] },

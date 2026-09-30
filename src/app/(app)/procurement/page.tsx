@@ -16,7 +16,7 @@ export default async function ProcurementPage() {
     <>
       <PageHeader
         title="Procurement"
-        meta={`${ORG.name} · ${SUPPLIERS.length} active suppliers · sample data`}
+        meta={`${ORG.name} · ${SUPPLIERS.length} active suppliers`}
       />
 
       <div className="mt-6">

@@ -21,22 +21,23 @@ export type BranchInputs = {
   financingCostPct: number; // annual, applied to initial investment
 };
 
+// Nandan Provisions' proposal for a second store; sales per sq ft set at the Baner Road store's September level
 export const DEFAULT_INPUTS: BranchInputs = {
-  name: "Hinjawadi Phase 2",
-  location: "Pune — IT corridor",
-  storeSqft: 2000,
-  initialInvestment: 6_200_000,
-  monthlyRent: 265_000,
-  deposit: 1_590_000,
-  expectedMonthlySales: 4_900_000,
-  grossMarginPct: 28,
-  employeeCount: 11,
-  monthlyPayroll: 430_000,
-  monthlyUtilities: 92_000,
-  otherMonthlyOpex: 138_000,
-  marketingLaunchCost: 420_000,
-  expectedAnnualGrowthPct: 12,
-  financingCostPct: 11,
+  name: "Second store, Wakad",
+  location: "Wakad, Pune",
+  storeSqft: 1800,
+  initialInvestment: 2_400_000, // fit-out ₹9 L, racks, chillers and tills ₹5 L, opening stock ₹10 L
+  monthlyRent: 144_000, // ₹80 per sq ft
+  deposit: 432_000, // three months' rent
+  expectedMonthlySales: 2_800_000,
+  grossMarginPct: 19,
+  employeeCount: 10,
+  monthlyPayroll: 185_000,
+  monthlyUtilities: 38_000,
+  otherMonthlyOpex: 36_000,
+  marketingLaunchCost: 120_000,
+  expectedAnnualGrowthPct: 8,
+  financingCostPct: 11.5, // MSME term loan
 };
 
 export type ScenarioKey = "conservative" | "base" | "optimistic";
@@ -212,7 +213,7 @@ export function recommend(input: BranchInputs): Recommendation {
     verdict === "Proceed"
       ? `Base case breaks even at ${b.breakEvenAchievementPct.toFixed(0)}% of expected sales and pays back in ${b.paybackMonths} months; the conservative case still returns an operating profit and pays back within ${c.paybackMonths} months.`
       : verdict === "Do not proceed"
-        ? `The conservative case ${c.operatingProfitMonthly <= 0 ? "runs an operating loss" : `pays back in ${c.paybackMonths ?? "60+"} months`}, and base payback is ${b.paybackMonths ?? "60+"} months — outside the portfolio norm of ~17 months.`
+        ? `The conservative case ${c.operatingProfitMonthly <= 0 ? "runs an operating loss" : `pays back in ${c.paybackMonths ?? "60+"} months`}, and base payback is ${b.paybackMonths ?? "60+"} months — outside the owner's 24-month limit.`
         : `Base economics work (payback ${b.paybackMonths} months), but the conservative case is thin at ${c.breakEvenAchievementPct.toFixed(0)}% break-even achievement. Proceed only with the conditions below addressed.`;
 
   return {

@@ -17,13 +17,13 @@ export default async function FinancePage() {
     <>
       <PageHeader
         title="Finance & accounting"
-        meta={`${ORG.name} · month ending ${ORG.asOf} · sample data`}
+        meta={`${ORG.name} · month ending ${ORG.asOf}`}
       />
 
       <div className="mt-6">
         <FigureRow>
           <Figure label="Revenue" value={money(cur.revenue)} deltas={kpiDeltas(kpi("revenue"))} spark={<Sparkline data={kpi("revenue").series} />} />
-          <Figure label="Gross profit" value={money(d.grossProfit)} deltas={[{ value: d.grossMargin - 34, label: "vs target", suffix: "pts" }]} spark={<Sparkline data={PNL.map((r) => derive(r).grossProfit)} />} />
+          <Figure label="Gross profit" value={money(d.grossProfit)} deltas={[{ value: d.grossMargin - kpi("gross_margin").target, label: "vs target", suffix: "pts" }]} spark={<Sparkline data={PNL.map((r) => derive(r).grossProfit)} />} />
           <Figure label="Operating expenses" value={money(cur.opex)} higherIsBetter={false} deltas={[{ value: ((cur.opex - PNL[PNL.length - 2].opex) / PNL[PNL.length - 2].opex) * 100, label: "vs prior" }]} spark={<Sparkline data={PNL.map((r) => r.opex)} tone="soft" />} />
           <Figure label="Net profit" value={money(d.netProfit)} deltas={kpiDeltas(kpi("net_margin"))} spark={<Sparkline data={PNL.map((r) => derive(r).netProfit)} />} />
         </FigureRow>

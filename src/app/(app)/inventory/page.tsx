@@ -8,7 +8,7 @@ import { PRODUCTS, ORG } from "@/lib/mock";
 const belowReorder = PRODUCTS.filter((p) => p.onHand <= p.reorder).length;
 const byCategory = Object.entries(
   PRODUCTS.reduce<Record<string, number>>((acc, p) => {
-    acc[p.category] = (acc[p.category] ?? 0) + p.revenue90d;
+    acc[p.category] = (acc[p.category] ?? 0) + p.revenue30d;
     return acc;
   }, {}),
 ).map(([label, value]) => ({ label, value }));
@@ -20,7 +20,7 @@ export default async function InventoryPage() {
     <>
       <PageHeader
         title="Inventory"
-        meta={`${ORG.name} · ${PRODUCTS.length} tracked SKUs · sample data`}
+        meta={`${ORG.name} · ${PRODUCTS.length} tracked SKUs`}
       />
 
       <div className="mt-6">
@@ -32,7 +32,7 @@ export default async function InventoryPage() {
         </FigureRow>
       </div>
 
-      <Section title="Category mix — 90-day revenue">
+      <Section title="Tracked products — September revenue by category">
         <BarComposition items={byCategory.sort((a, b) => b.value - a.value)} />
       </Section>
 

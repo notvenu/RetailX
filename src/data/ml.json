@@ -1,0 +1,645 @@
+{
+  "revenueForecast": [
+    {
+      "x": "Apr",
+      "actual": 2890000,
+      "predicted": 2604733,
+      "lower": 2205363,
+      "upper": 3004104
+    },
+    {
+      "x": "May",
+      "actual": 2820000,
+      "predicted": 2901082,
+      "lower": 2456274,
+      "upper": 3345890
+    },
+    {
+      "x": "Jun",
+      "actual": 2735000,
+      "predicted": 2851938,
+      "lower": 2414665,
+      "upper": 3289211
+    },
+    {
+      "x": "Jul",
+      "actual": 2780000,
+      "predicted": 2699665,
+      "lower": 2285739,
+      "upper": 3113590
+    },
+    {
+      "x": "Aug",
+      "actual": 2955000,
+      "predicted": 2732704,
+      "lower": 2313712,
+      "upper": 3151695
+    },
+    {
+      "x": "Sep",
+      "actual": 3402250,
+      "predicted": 2782027,
+      "lower": 2355473,
+      "upper": 3208581
+    },
+    {
+      "x": "Oct",
+      "actual": null,
+      "predicted": 2863585,
+      "lower": 2424526,
+      "upper": 3302643
+    },
+    {
+      "x": "Nov",
+      "actual": null,
+      "predicted": 2858822,
+      "lower": 2238932,
+      "upper": 3478712
+    },
+    {
+      "x": "Dec",
+      "actual": null,
+      "predicted": 2855011,
+      "lower": 2096816,
+      "upper": 3613207
+    },
+    {
+      "x": "Jan",
+      "actual": null,
+      "predicted": 2851963,
+      "lower": 1977409,
+      "upper": 3726517
+    }
+  ],
+  "forecastModel": {
+    "name": "Holt's linear trend, damped",
+    "target": "Monthly revenue, Baner Road store",
+    "trainedOn": "12 months",
+    "validation": "Rolling-origin, 6 folds",
+    "mape": 7.6,
+    "rmse": 300603,
+    "mae": 234357,
+    "bias": -5.2,
+    "limits": "Twelve months is too short to learn the yearly festival pattern, so Diwali (8 Nov 2026) is not in this forecast."
+  },
+  "anomalies": [
+    {
+      "metric": "Stock-out rate",
+      "branch": "Baner Road",
+      "date": "30 Sep 2026",
+      "actual": "3.2%",
+      "expected": "1.6%",
+      "deviation": "+1.6 pts",
+      "severity": "Medium",
+      "status": "Open",
+      "z": 6.0,
+      "cause": "Milk supply resumed at 10:30; morning shelves short"
+    },
+    {
+      "metric": "Stock-out rate",
+      "branch": "Baner Road",
+      "date": "29 Sep 2026",
+      "actual": "9.4%",
+      "expected": "1.9%",
+      "deviation": "+7.5 pts",
+      "severity": "High",
+      "status": "Open",
+      "z": 28.9,
+      "cause": "Milk not delivered: tanker strike at the dairy agency"
+    },
+    {
+      "metric": "Shrinkage",
+      "branch": "Baner Road",
+      "date": "22 Sep 2026",
+      "actual": "₹9,850",
+      "expected": "₹765",
+      "deviation": "+1187.6%",
+      "severity": "High",
+      "status": "Open",
+      "z": 25.5,
+      "cause": "Weekly count: about 5 kg cashew (21 packs) and 9 L ghee unaccounted for"
+    },
+    {
+      "metric": "Gross margin",
+      "branch": "Baner Road",
+      "date": "17 Sep 2026",
+      "actual": "15.9%",
+      "expected": "19.4%",
+      "deviation": "−3.5 pts",
+      "severity": "High",
+      "status": "Open",
+      "z": 31.5,
+      "cause": "Dry-fruit 'Buy 2 Get 1' applied to the whole category at the till"
+    },
+    {
+      "metric": "Avg. discount",
+      "branch": "Baner Road",
+      "date": "17 Sep 2026",
+      "actual": "6.8%",
+      "expected": "2.2%",
+      "deviation": "+4.6 pts",
+      "severity": "High",
+      "status": "Open",
+      "z": 31.0,
+      "cause": "Dry-fruit 'Buy 2 Get 1' applied to the whole category at the till"
+    },
+    {
+      "metric": "Footfall",
+      "branch": "Baner Road",
+      "date": "8 Sep 2026",
+      "actual": "281",
+      "expected": "446",
+      "deviation": "−37.1%",
+      "severity": "High",
+      "status": "Open",
+      "z": 7.8,
+      "cause": "Power cut 11:05-15:40; generator did not start"
+    },
+    {
+      "metric": "Revenue",
+      "branch": "Baner Road",
+      "date": "8 Sep 2026",
+      "actual": "₹58,400",
+      "expected": "₹96,450",
+      "deviation": "−39.5%",
+      "severity": "High",
+      "status": "Open",
+      "z": 6.7,
+      "cause": "Power cut 11:05-15:40; generator did not start"
+    }
+  ],
+  "ledger": {
+    "fyMonths": 6,
+    "pnl": [
+      {
+        "month": "Oct",
+        "revenue": 3682000,
+        "cogs": 2971374,
+        "opex": 617000,
+        "otherIncome": 3100
+      },
+      {
+        "month": "Nov",
+        "revenue": 3015000,
+        "cogs": 2424060,
+        "opex": 469000,
+        "otherIncome": 3300
+      },
+      {
+        "month": "Dec",
+        "revenue": 2940000,
+        "cogs": 2366700,
+        "opex": 469200,
+        "otherIncome": 3200
+      },
+      {
+        "month": "Jan",
+        "revenue": 2865000,
+        "cogs": 2303460,
+        "opex": 461700,
+        "otherIncome": 3400
+      },
+      {
+        "month": "Feb",
+        "revenue": 2710000,
+        "cogs": 2173420,
+        "opex": 461300,
+        "otherIncome": 3100
+      },
+      {
+        "month": "Mar",
+        "revenue": 3005000,
+        "cogs": 2422030,
+        "opex": 479100,
+        "otherIncome": 3600
+      },
+      {
+        "month": "Apr",
+        "revenue": 2890000,
+        "cogs": 2326450,
+        "opex": 491000,
+        "otherIncome": 3500
+      },
+      {
+        "month": "May",
+        "revenue": 2820000,
+        "cogs": 2264460,
+        "opex": 493300,
+        "otherIncome": 3300
+      },
+      {
+        "month": "Jun",
+        "revenue": 2735000,
+        "cogs": 2198940,
+        "opex": 487400,
+        "otherIncome": 3400
+      },
+      {
+        "month": "Jul",
+        "revenue": 2780000,
+        "cogs": 2237900,
+        "opex": 483300,
+        "otherIncome": 3600
+      },
+      {
+        "month": "Aug",
+        "revenue": 2955000,
+        "cogs": 2381730,
+        "opex": 493500,
+        "otherIncome": 3500
+      },
+      {
+        "month": "Sep",
+        "revenue": 3402250,
+        "cogs": 2747045,
+        "opex": 504400,
+        "otherIncome": 3300
+      }
+    ],
+    "expenses": [
+      {
+        "category": "Rent",
+        "month": 165000,
+        "ytd": 990000,
+        "share": 32.7
+      },
+      {
+        "category": "Payroll and benefits",
+        "month": 228000,
+        "ytd": 1343400,
+        "share": 45.2
+      },
+      {
+        "category": "Electricity and water",
+        "month": 43700,
+        "ytd": 285400,
+        "share": 8.7
+      },
+      {
+        "category": "Marketing",
+        "month": 21500,
+        "ytd": 89500,
+        "share": 4.3
+      },
+      {
+        "category": "Other operating",
+        "month": 46200,
+        "ytd": 244600,
+        "share": 9.2
+      }
+    ],
+    "categoryMonth": [
+      {
+        "category": "Staples and grains",
+        "revenue": 1020675,
+        "grossMarginPct": 12.3
+      },
+      {
+        "category": "Edible oil and ghee",
+        "revenue": 408270,
+        "grossMarginPct": 10.0
+      },
+      {
+        "category": "Dairy and bakery",
+        "revenue": 374248,
+        "grossMarginPct": 13.0
+      },
+      {
+        "category": "Snacks and beverages",
+        "revenue": 476315,
+        "grossMarginPct": 26.0
+      },
+      {
+        "category": "Personal and home care",
+        "revenue": 442292,
+        "grossMarginPct": 29.0
+      },
+      {
+        "category": "Dry fruits and puja",
+        "revenue": 340225,
+        "grossMarginPct": 27.5
+      },
+      {
+        "category": "Fruits and vegetables",
+        "revenue": 204135,
+        "grossMarginPct": 34.0
+      },
+      {
+        "category": "Other",
+        "revenue": 136090,
+        "grossMarginPct": 25.0
+      }
+    ],
+    "kpis": {
+      "revenueTarget": [
+        3500000,
+        3000000,
+        2950000,
+        2900000,
+        2800000,
+        3000000,
+        3050000,
+        3000000,
+        2950000,
+        2950000,
+        3100000,
+        3200000
+      ],
+      "salesTargetPct": [
+        105.2,
+        100.5,
+        99.7,
+        98.8,
+        96.8,
+        100.2,
+        94.8,
+        94.0,
+        92.7,
+        94.2,
+        95.3,
+        106.3
+      ],
+      "avgBill": [
+        304,
+        264,
+        254,
+        250,
+        245,
+        252,
+        249,
+        246,
+        244,
+        245,
+        250,
+        264
+      ],
+      "stockoutPct": [
+        2.9,
+        2.1,
+        2.0,
+        1.8,
+        1.9,
+        2.3,
+        2.0,
+        2.2,
+        2.4,
+        2.6,
+        2.1,
+        2.5
+      ],
+      "invTurnover": [
+        13.5,
+        13.2,
+        13.0,
+        12.9,
+        12.3,
+        13.0,
+        12.7,
+        12.4,
+        12.2,
+        12.4,
+        12.0,
+        14.3
+      ],
+      "dio": [
+        28,
+        27,
+        29,
+        29,
+        27,
+        29,
+        28,
+        30,
+        29,
+        30,
+        31,
+        25
+      ],
+      "ccc": [
+        16,
+        17,
+        18,
+        19,
+        18,
+        18,
+        18,
+        19,
+        19,
+        19,
+        20,
+        16
+      ],
+      "roce": [
+        25.2,
+        29.8,
+        29.4,
+        29.9,
+        25.8,
+        25.6,
+        23.1,
+        21.8,
+        16.9,
+        15.6,
+        16.7,
+        26.0
+      ],
+      "revPerEmployee": [
+        334727,
+        274091,
+        267273,
+        260455,
+        246364,
+        273182,
+        262727,
+        256364,
+        248636,
+        252727,
+        246250,
+        283521
+      ]
+    },
+    "balances": {
+      "cash": 642000,
+      "receivables": 118500,
+      "payables": 962000,
+      "inventory": 2310000,
+      "headcount": 12
+    },
+    "breakEvenPct": 129.9,
+    "month": {
+      "days": 30,
+      "bills": 12898,
+      "footfall": 14547
+    }
+  },
+  "products": [
+    {
+      "sku": "ST-ATTA-10",
+      "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+      "category": "Staples and grains",
+      "price": 499,
+      "onHand": 57,
+      "reorder": 30,
+      "units30d": 322,
+      "lost30d": 0,
+      "revenue30d": 160678,
+      "marginPct": 8.6,
+      "forecast16d": 161,
+      "suggestedOrder": 116
+    },
+    {
+      "sku": "ST-RICE-05",
+      "name": "Indrayani Rice 5 kg",
+      "category": "Staples and grains",
+      "price": 385,
+      "onHand": 45,
+      "reorder": 24,
+      "units30d": 250,
+      "lost30d": 1,
+      "revenue30d": 96250,
+      "marginPct": 12.2,
+      "forecast16d": 123,
+      "suggestedOrder": 89
+    },
+    {
+      "sku": "ST-TOOR-01",
+      "name": "Toor Dal 1 kg",
+      "category": "Staples and grains",
+      "price": 148,
+      "onHand": 90,
+      "reorder": 45,
+      "units30d": 505,
+      "lost30d": 8,
+      "revenue30d": 74740,
+      "marginPct": 12.8,
+      "forecast16d": 247,
+      "suggestedOrder": 176
+    },
+    {
+      "sku": "ST-SUGR-01",
+      "name": "Sugar 1 kg",
+      "category": "Staples and grains",
+      "price": 46,
+      "onHand": 141,
+      "reorder": 70,
+      "units30d": 802,
+      "lost30d": 72,
+      "revenue30d": 36892,
+      "marginPct": 8.7,
+      "forecast16d": 384,
+      "suggestedOrder": 271
+    },
+    {
+      "sku": "ST-JAGR-01",
+      "name": "Kolhapuri Jaggery 1 kg",
+      "category": "Staples and grains",
+      "price": 72,
+      "onHand": 37,
+      "reorder": 20,
+      "units30d": 275,
+      "lost30d": 50,
+      "revenue30d": 19800,
+      "marginPct": 19.4,
+      "forecast16d": 104,
+      "suggestedOrder": 75
+    },
+    {
+      "sku": "OL-SUNF-01",
+      "name": "Fortune Sunflower Oil 1 L",
+      "category": "Edible oil and ghee",
+      "price": 162,
+      "onHand": 114,
+      "reorder": 60,
+      "units30d": 648,
+      "lost30d": 29,
+      "revenue30d": 104976,
+      "marginPct": 8.0,
+      "forecast16d": 312,
+      "suggestedOrder": 223
+    },
+    {
+      "sku": "OL-GHEE-01",
+      "name": "Gowardhan Cow Ghee 1 L",
+      "category": "Edible oil and ghee",
+      "price": 689,
+      "onHand": 22,
+      "reorder": 12,
+      "units30d": 124,
+      "lost30d": 14,
+      "revenue30d": 85436,
+      "marginPct": 11.2,
+      "forecast16d": 51,
+      "suggestedOrder": 32
+    },
+    {
+      "sku": "DA-MILK-05",
+      "name": "Chitale Toned Milk 500 ml",
+      "category": "Dairy and bakery",
+      "price": 30,
+      "onHand": 3,
+      "reorder": 100,
+      "units30d": 3377,
+      "lost30d": 78,
+      "revenue30d": 101310,
+      "marginPct": 10.0,
+      "forecast16d": 1633,
+      "suggestedOrder": 1735
+    },
+    {
+      "sku": "BV-TEA-500",
+      "name": "Tata Tea Gold 500 g",
+      "category": "Snacks and beverages",
+      "price": 325,
+      "onHand": 17,
+      "reorder": 16,
+      "units30d": 168,
+      "lost30d": 9,
+      "revenue30d": 54600,
+      "marginPct": 13.2,
+      "forecast16d": 86,
+      "suggestedOrder": 76
+    },
+    {
+      "sku": "SN-PRLG-08",
+      "name": "Parle-G Biscuits 800 g",
+      "category": "Snacks and beverages",
+      "price": 90,
+      "onHand": 42,
+      "reorder": 35,
+      "units30d": 367,
+      "lost30d": 18,
+      "revenue30d": 33030,
+      "marginPct": 12.2,
+      "forecast16d": 187,
+      "suggestedOrder": 161
+    },
+    {
+      "sku": "DF-CASH-25",
+      "name": "Cashew W320 250 g",
+      "category": "Dry fruits and puja",
+      "price": 265,
+      "onHand": 50,
+      "reorder": 14,
+      "units30d": 196,
+      "lost30d": 0,
+      "revenue30d": 51940,
+      "marginPct": 22.6,
+      "forecast16d": 69,
+      "suggestedOrder": 24
+    },
+    {
+      "sku": "PJ-COCO-01",
+      "name": "Coconut, whole",
+      "category": "Dry fruits and puja",
+      "price": 45,
+      "onHand": 18,
+      "reorder": 30,
+      "units30d": 683,
+      "lost30d": 105,
+      "revenue30d": 30735,
+      "marginPct": 24.4,
+      "forecast16d": 176,
+      "suggestedOrder": 173
+    }
+  ]
+}
