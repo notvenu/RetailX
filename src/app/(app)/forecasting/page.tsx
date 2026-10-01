@@ -1,5 +1,6 @@
 import { PageHeader, Section, Figure, FigureRow, DataTable, KeyValue, Note } from "@/components/ui";
 import { LineChart } from "@/components/charts";
+import { RevenuePredictor, DayPredictor } from "@/components/Predict";
 import { REVENUE_FORECAST, FORECAST_MODEL, ORG } from "@/lib/mock";
 import { money, moneyCompact, pct } from "@/lib/format";
 
@@ -31,7 +32,10 @@ export default function ForecastingPage() {
         </FigureRow>
       </div>
 
-      <Section title="Revenue forecast" meta="6 months history · 4 months projected">
+      <RevenuePredictor />
+      <DayPredictor />
+
+      <Section title="Revenue forecast — last scheduled run" meta="6 months history · 4 months projected">
         <LineChart points={REVENUE_FORECAST} showBand showPredicted height={300} />
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-ink-soft">
           <span className="inline-flex items-center gap-1.5"><span className="h-0 w-4 border-t-2 border-accent" />Actual revenue</span>

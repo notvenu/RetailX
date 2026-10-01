@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronUp, Plus } from "lucide-react";
 import { DataTable, StatusPill, type Column } from "@/components/ui";
 import { money, num, pct } from "@/lib/format";
 import {
@@ -28,18 +28,29 @@ function useCollection<T>(storageKey: string, seed: T[]) {
     }
   }, [key]);
 
+  const save = (next: T[]) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+  };
+
   const add = (rec: T) => {
     setRows((prev) => {
       const next = [rec, ...prev];
-      try {
-        localStorage.setItem(key, JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
+      save(next);
       return next;
     });
     setDirty(true);
   };
+
+  const undo = () =>
+    setRows((prev) => {
+      const next = prev.slice(1);
+      save(next);
+      return next;
+    });
 
   const reset = () => {
     try {
@@ -51,7 +62,7 @@ function useCollection<T>(storageKey: string, seed: T[]) {
     setDirty(false);
   };
 
-  return { rows, add, reset, dirty };
+  return { rows, add, undo, reset, dirty };
 }
 
 export type FormField = {
@@ -63,6 +74,14 @@ export type FormField = {
   placeholder?: string;
   defaultValue?: string;
 };
+
+const today = () => new Date().toISOString().slice(0, 10);
+/** 2026-10-01 → "01 Oct", the registers' date style */
+const shortDate = (iso: string) =>
+  new Date(iso + "T00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
+
+const control =
+  "rounded-[4px] border border-rule-strong bg-white px-2 py-1.5 text-[0.82rem] tabular-nums text-ink outline-none focus-visible:border-accent";
 
 export function CollectionPanel<T>({
   title,
@@ -88,34 +107,31 @@ export function CollectionPanel<T>({
   /** who is entering the record — stamped into the confirmation line */
   role?: string;
 }) {
-  const { rows, add, reset, dirty } = useCollection(storageKey, seed);
-  const [open, setOpen] = useState(false);
-  const [values, setValues] = useState<Record<string, string>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [justAdded, setJustAdded] = useState(false);
+  const { rows, add, undo, reset, dirty } = useCollection(storageKey, seed);
+  const [open, setOpen] = useState(true);
+  const [added, setAdded] = useState(0); // records added this visit; they sit at the top of `rows`
+  const firstRef = useRef<HTMLInputElement & HTMLSelectElement>(null);
 
+  // a select with one option (e.g. the only branch) is filled in, not asked
+  const shown = fields.filter((f) => !(f.type === "select" && f.options?.length === 1));
   const blank = useMemo(
-    () => Object.fromEntries(fields.map((f) => [f.name, f.defaultValue ?? ""])),
+    () =>
+      Object.fromEntries(
+        fields.map((f) => [
+          f.name,
+          f.defaultValue ?? (f.type === "date" ? today() : f.options?.length === 1 ? f.options[0] : ""),
+        ]),
+      ),
     [fields],
   );
-
-  const start = () => {
-    setValues(blank);
-    setError(null);
-    setOpen(true);
-    setJustAdded(false);
-  };
+  const [values, setValues] = useState<Record<string, string>>(blank);
 
   const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const missing = fields.filter((f) => f.required && !String(values[f.name] ?? "").trim());
-    if (missing.length) {
-      setError(`Fill in: ${missing.map((f) => f.label).join(", ")}.`);
-      return;
-    }
+    e.preventDefault(); // native `required` has already validated
     add(build(values));
-    setOpen(false);
-    setJustAdded(true);
+    setAdded((n) => n + 1);
+    setValues(blank); // stay open for the next entry
+    firstRef.current?.focus();
   };
 
   return (
@@ -123,20 +139,28 @@ export function CollectionPanel<T>({
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-2">
         <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-ink-soft">
           {title}
+          {added ? <span className="ml-2 normal-case tracking-normal text-accent">· {added} new</span> : null}
         </h2>
         <div className="flex items-center gap-3 text-[0.78rem]">
           {meta ? <span className="text-ink-faint">{meta}</span> : null}
           {dirty ? (
-            <button onClick={reset} className="text-ink-faint underline-offset-2 hover:text-ink hover:underline">
+            <button
+              onClick={() => {
+                reset();
+                setAdded(0);
+              }}
+              className="text-ink-faint underline-offset-2 hover:text-ink hover:underline"
+            >
               Reset
             </button>
           ) : null}
           <button
-            onClick={() => (open ? setOpen(false) : start())}
-            className="inline-flex items-center gap-1 rounded-[4px] bg-accent px-2.5 py-1 text-[0.76rem] font-medium text-white transition-colors hover:bg-accent-hover"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            className="inline-flex items-center gap-1 rounded-[4px] border border-rule-strong px-2.5 py-1 text-[0.76rem] font-medium text-ink-soft transition-colors hover:border-accent hover:text-accent"
           >
-            {open ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
-            {open ? "Cancel" : addLabel}
+            {open ? <ChevronUp className="size-3.5" /> : <Plus className="size-3.5" />}
+            {open ? "Hide form" : addLabel}
           </button>
         </div>
       </div>
@@ -144,31 +168,35 @@ export function CollectionPanel<T>({
       {open ? (
         <form
           onSubmit={submit}
-          className="mb-4 grid gap-x-5 gap-y-3 border border-rule bg-panel/50 p-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mb-4 flex flex-wrap items-end gap-x-3 gap-y-3 border border-rule bg-panel/50 p-3"
         >
-          {fields.map((f) => (
-            <label key={f.name} className="flex flex-col gap-1">
-              <span className="text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-ink-soft">
+          {shown.map((f, i) => (
+            <label key={f.name} className="flex min-w-[8.5rem] flex-1 flex-col gap-1">
+              <span className="text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-ink-soft">
                 {f.label}
                 {f.required ? <span className="text-bad"> *</span> : null}
               </span>
               {f.type === "select" ? (
                 <select
+                  ref={i === 0 ? firstRef : undefined}
                   name={f.name}
+                  required={f.required}
                   value={values[f.name] ?? ""}
                   onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                  className="rounded-[4px] border border-rule-strong bg-white px-2 py-1.5 text-[0.82rem] text-ink outline-none focus-visible:border-accent"
+                  className={control}
                 >
-                  <option value="">Select…</option>
+                  {f.defaultValue ? null : <option value="">Select…</option>}
                   {f.options?.map((o) => (
                     <option key={o} value={o}>{o}</option>
                   ))}
                 </select>
               ) : (
                 <input
+                  ref={i === 0 ? firstRef : undefined}
                   name={f.name}
+                  required={f.required}
                   type={f.type === "date" ? "date" : "text"}
-                  inputMode={f.type === "money" || f.type === "number" ? "numeric" : undefined}
+                  inputMode={f.type === "money" || f.type === "number" ? "decimal" : undefined}
                   placeholder={f.placeholder}
                   value={
                     f.type === "money" && values[f.name]
@@ -182,31 +210,43 @@ export function CollectionPanel<T>({
                         : e.target.value;
                     setValues((v) => ({ ...v, [f.name]: raw }));
                   }}
-                  className="rounded-[4px] border border-rule-strong bg-white px-2 py-1.5 text-[0.82rem] tabular-nums text-ink outline-none focus-visible:border-accent"
+                  className={control}
                 />
               )}
             </label>
           ))}
-
-          <div className="flex items-center gap-3 sm:col-span-2 lg:col-span-3">
-            <button
-              type="submit"
-              className="rounded-[4px] bg-accent px-4 py-1.5 text-[0.8rem] font-medium text-white transition-colors hover:bg-accent-hover"
-            >
-              Save record
-            </button>
-            {error ? <span className="text-[0.78rem] text-bad">{error}</span> : null}
-          </div>
+          <button
+            type="submit"
+            className="inline-flex items-center gap-1 rounded-[4px] bg-accent px-4 py-1.5 text-[0.8rem] font-medium text-white transition-colors hover:bg-accent-hover"
+          >
+            <Plus className="size-3.5" /> {addLabel}
+          </button>
         </form>
       ) : null}
 
-      {justAdded ? (
-        <p className="mb-3 rounded-[4px] border border-good/25 bg-good-wash px-3 py-1.5 text-[0.78rem] text-good">
-          Record added{role ? ` by ${role}` : ""} and saved to this browser.
+      {added ? (
+        <p className="mb-3 flex flex-wrap items-center gap-x-3 rounded-[4px] border border-good/25 bg-good-wash px-3 py-1.5 text-[0.78rem] text-good">
+          <span>
+            {added} saved{role ? ` by ${role}` : ""} to this browser, highlighted below. Keep typing and press Enter to add the next.
+          </span>
+          <button
+            onClick={() => {
+              undo();
+              setAdded((n) => n - 1);
+            }}
+            className="font-medium underline underline-offset-2 hover:text-ink"
+          >
+            Undo last
+          </button>
         </p>
       ) : null}
 
-      <DataTable columns={columns} rows={rows} getKey={getKey} />
+      <DataTable
+        columns={columns}
+        rows={rows}
+        getKey={getKey}
+        rowClassName={(_, i) => (i < added ? "bg-accent-wash" : "")}
+      />
     </section>
   );
 }
@@ -231,19 +271,19 @@ export function SalesInvoices({ role }: RoleProp) {
       addLabel="Record invoice"
       getKey={(r, i) => `${r.invoice}-${i}`}
       fields={[
-        { name: "customer", label: "Customer", type: "text", required: true, placeholder: "Walk-in" },
+        { name: "customer", label: "Customer", type: "text", placeholder: "Walk-in" },
         { name: "branch", label: "Branch", type: "select", options: branchNames, required: true },
-        { name: "date", label: "Date", type: "text", placeholder: "Today" },
-        { name: "lines", label: "Line items", type: "number", required: true },
+        { name: "date", label: "Date", type: "date" },
+        { name: "lines", label: "Line items", type: "number" },
         { name: "total", label: "Invoice total", type: "money", required: true },
         { name: "marginPct", label: "Margin %", type: "number" },
-        { name: "status", label: "Payment", type: "select", options: ["Paid", "Part-paid", "Unpaid"] },
+        { name: "status", label: "Payment", type: "select", options: ["Paid", "Part-paid", "Unpaid"], defaultValue: "Paid" },
       ]}
       build={(v) => ({
         invoice: "INV-" + Date.now().toString().slice(-5),
-        date: v.date?.trim() || "Today",
+        date: v.date ? shortDate(v.date) : "Today",
         branch: v.branch,
-        customer: v.customer,
+        customer: v.customer.trim() || "Walk-in",
         lines: Number(v.lines) || 0,
         total: Number(v.total) || 0,
         marginPct: Number(v.marginPct) || 0,
@@ -328,17 +368,17 @@ export function PurchaseOrdersPanel({ role }: RoleProp) {
       fields={[
         { name: "supplier", label: "Supplier", type: "select", options: SUPPLIERS.map((s) => s.name), required: true },
         { name: "branch", label: "Deliver to", type: "select", options: branchNames, required: true },
-        { name: "ordered", label: "Order date", type: "text", placeholder: "Today" },
-        { name: "expected", label: "Expected", type: "text", placeholder: "e.g. 08 Oct" },
+        { name: "ordered", label: "Order date", type: "date" },
+        { name: "expected", label: "Expected", type: "date", defaultValue: "" },
         { name: "total", label: "Order value", type: "money", required: true },
-        { name: "status", label: "Status", type: "select", options: ["In transit", "Received", "Overdue"] },
+        { name: "status", label: "Status", type: "select", options: ["In transit", "Received", "Overdue"], defaultValue: "In transit" },
       ]}
       build={(v) => ({
         po: "PO-" + Date.now().toString().slice(-4),
         supplier: v.supplier,
         branch: v.branch,
-        ordered: v.ordered?.trim() || "Today",
-        expected: v.expected?.trim() || "TBC",
+        ordered: v.ordered ? shortDate(v.ordered) : "Today",
+        expected: v.expected ? shortDate(v.expected) : "TBC",
         total: Number(v.total) || 0,
         status: v.status || "In transit",
       })}
@@ -371,7 +411,7 @@ export function ExpensesPanel({ role }: RoleProp) {
         { name: "category", label: "Category", type: "select", options: EXPENSES.map((e) => e.category), required: true },
         { name: "vendor", label: "Vendor / payee", type: "text", required: true },
         { name: "branch", label: "Branch", type: "select", options: branchNames, required: true },
-        { name: "method", label: "Paid via", type: "select", options: ["Cash", "Bank", "Card", "UPI"] },
+        { name: "method", label: "Paid via", type: "select", options: ["Cash", "Bank", "Card", "UPI"], defaultValue: "UPI" },
         { name: "amount", label: "Amount", type: "money", required: true },
       ]}
       build={(v) => ({
@@ -414,7 +454,7 @@ export function EmployeesPanel({ role }: RoleProp) {
         { name: "designation", label: "Designation", type: "text", required: true },
         { name: "joined", label: "Joining date", type: "date" },
         { name: "monthlyCTC", label: "Monthly CTC", type: "money", required: true },
-        { name: "status", label: "Status", type: "select", options: ["Active", "Probation"] },
+        { name: "status", label: "Status", type: "select", options: ["Active", "Probation"], defaultValue: "Probation" },
       ]}
       build={(v) => ({
         code: v.code.toUpperCase(),

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHeader, Section, Figure, FigureRow, DataTable, StatusPill, Delta, Note } from "@/components/ui";
 import { Sparkline } from "@/components/charts";
+import { AnomalyCheck } from "@/components/Predict";
 import { KPIS } from "@/lib/mock";
 import { kpi, kpiDeltas } from "@/lib/kpi";
 import { BRANCHES, ANOMALIES, ORG } from "@/lib/mock";
@@ -107,6 +108,8 @@ export default function AnalyticsPage() {
           <Link href="/forecasting" className="font-medium text-accent hover:underline">See the forecasting model →</Link>
         </Note>
       </Section>
+
+      <AnomalyCheck />
     </>
   );
 }

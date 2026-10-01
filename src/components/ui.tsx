@@ -139,7 +139,7 @@ export function FigureRow({ children }: { children: ReactNode }) {
 
 const STATUS_TONE: Record<string, "good" | "warn" | "bad" | "flat"> = {
   Paid: "good", Received: "good", Active: "good", Healthy: "good", Approved: "good",
-  Resolved: "good", Proceed: "good",
+  Resolved: "good", Proceed: "good", Normal: "good",
   "Part-paid": "warn", "In transit": "warn", "Ramp-up": "warn", Reorder: "warn",
   Investigating: "warn", Probation: "warn", "Proceed with conditions": "warn", Open: "warn",
   Unpaid: "bad", Overdue: "bad", Critical: "bad", "Do not proceed": "bad",
@@ -178,11 +178,13 @@ export function DataTable<T>({
   rows,
   empty = "No records for this view.",
   getKey,
+  rowClassName,
 }: {
   columns: Column<T>[];
   rows: T[];
   empty?: string;
   getKey: (row: T, i: number) => string | number;
+  rowClassName?: (row: T, i: number) => string;
 }) {
   return (
     <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
@@ -214,7 +216,7 @@ export function DataTable<T>({
             </tr>
           ) : (
             rows.map((row, i) => (
-              <tr key={getKey(row, i)} className="transition-colors hover:bg-panel/70">
+              <tr key={getKey(row, i)} className={`transition-colors hover:bg-panel/70 ${rowClassName?.(row, i) ?? ""}`}>
                 {columns.map((c) => (
                   <td
                     key={c.key}

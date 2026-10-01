@@ -51,3 +51,4 @@ _shots.mjs
 ml/raw/
 ml/models/
 .playwright-mcp/
+__pycache__/

@@ -28,11 +28,29 @@ Route access is enforced in `src/proxy.ts` and mirrored in the sidebar (`src/lib
 
 ## Data entry
 
-Sales, Inventory, Procurement, Finance and People each have an **add-record form** (top-right
-of the main table). Whoever can open the module can add to it. Submitted records are validated,
-prepended to the table, and saved to `localStorage` for that browser — they survive reload.
-Each panel has a **Reset** link that clears the added records and restores the seed data.
+Sales, Inventory, Procurement, Finance and People each have a **quick-entry form** open above the
+main table. Dates default to today, the single branch and usual statuses are pre-filled, and only the
+fields marked * are required, so most records are one or two fields and Enter. The form stays open and
+refocuses for the next entry; new rows are highlighted, counted in the table heading, and the last one
+can be undone. Records save to `localStorage` for that browser; **Reset** restores the seed data.
 `src/components/CollectionPanel.tsx` holds the generic panel and the per-module presets.
+
+## Run your own predictions
+
+Forecasting, Inventory and Analytics have forms that run the models on your inputs through
+`POST /api/predict`, which pipes the JSON to `python ml/predict.py` (needs the Python packages below;
+set `PYTHON` if `python` isn't on PATH):
+
+| Form | Page | Model |
+|---|---|---|
+| Predict revenue: edit or add months | Forecasting | Holt's damped trend, refit with rolling-origin back-test |
+| Predict a day's sales: date, promo, school holiday, uplift | Forecasting | day-book weekday baseline x LightGBM promo effect (`ml/models/branch.joblib`) |
+| Predict demand for a product: stock, days, service level | Inventory | weekday demand + safety stock at the chosen service level |
+| Check a day: any of the day's figures | Analytics | robust z-score vs September's same weekday |
+
+```bash
+python ml/predict.py --check   # self-check, one run of each
+```
 
 ## Modules
 

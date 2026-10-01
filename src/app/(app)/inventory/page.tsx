@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { PageHeader, Section, Figure, FigureRow } from "@/components/ui";
 import { Sparkline, BarComposition } from "@/components/charts";
 import { InventoryProducts } from "@/components/CollectionPanel";
+import { DemandPredictor } from "@/components/Predict";
 import { kpi, kpiDeltas } from "@/lib/kpi";
 import { PRODUCTS, ORG } from "@/lib/mock";
 
@@ -35,6 +36,8 @@ export default async function InventoryPage() {
       <Section title="Tracked products — September revenue by category">
         <BarComposition items={byCategory.sort((a, b) => b.value - a.value)} />
       </Section>
+
+      <DemandPredictor />
 
       <InventoryProducts role={session?.user.role} />
     </>

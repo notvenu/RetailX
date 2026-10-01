@@ -94,20 +94,27 @@ def fmt(v, unit):
     return {"inr": f"₹{v:,.0f}", "pct": f"{v:.1f}%", "count": f"{v:,.0f}"}[unit]
 
 
+def metric_scale(daily, col):
+    """Expected value per day (median of the same weekday on other ordinary days), the residual,
+    and the residual's robust centre and spread. Shared with ml/predict.py's day check."""
+    ordinary = daily[daily.festival == ""]
+    exp = pd.Series(np.nan, index=daily.index)
+    for i, d in ordinary.iterrows():
+        peers = ordinary[(ordinary.weekday == d.weekday) & (ordinary.index != i)][col]
+        if len(peers) >= 2:
+            exp[i] = peers.median()
+    r = np.log(daily[col] / exp) if METRICS[col][1] else daily[col] - exp
+    med = r.median()
+    return exp, r, med, (r - med).abs().median() * 1.4826
+
+
 def detect_anomalies(daily):
     """Expected value = median of the same weekday on the month's other ordinary days.
     Festival days are meant to be unusual: they are never flagged and never used as a baseline."""
     ordinary = daily[daily.festival == ""]
     rows, per, flagged_days = [], {}, set()
     for col, (label, logr, sign, Z, unit) in METRICS.items():
-        exp = pd.Series(np.nan, index=daily.index)
-        for i, d in ordinary.iterrows():
-            peers = ordinary[(ordinary.weekday == d.weekday) & (ordinary.index != i)][col]
-            if len(peers) >= 2:
-                exp[i] = peers.median()
-        r = np.log(daily[col] / exp) if logr else daily[col] - exp
-        med = r.median()
-        mad = (r - med).abs().median() * 1.4826
+        exp, r, med, mad = metric_scale(daily, col)
         z = sign * (r - med) / mad
         flag = z > Z
         per[col] = {"z_threshold": Z, "flagged": int(flag.sum())}
@@ -131,6 +138,13 @@ def detect_anomalies(daily):
 # ---------------------------------------------------------------- product demand
 def weekday_rates(hist):
     return hist.groupby("weekday").demand_units.mean(), hist.demand_units.mean()
+
+
+def demand_plan(mine, ahead, z=Z95):
+    """Units expected over the weekdays in `ahead`, and safety stock covering a one-sided z service level."""
+    by_wd, overall = weekday_rates(mine)
+    forecast = float(sum(by_wd.get(w, overall) for w in ahead))
+    return forecast, z * mine.demand_units.std() * np.sqrt(len(ahead))  # daily errors assumed independent
 
 
 def product_demand(horizon=16):
@@ -161,9 +175,7 @@ def product_demand(horizon=16):
     products = []
     for k, g in s.groupby("sku", sort=False):
         mine = ordinary[ordinary.sku == k]
-        by_wd, overall = weekday_rates(mine)
-        forecast = float(sum(by_wd.get(w, overall) for w in ahead))
-        safety = Z95 * mine.demand_units.std() * np.sqrt(horizon)  # daily errors assumed independent
+        forecast, safety = demand_plan(mine, ahead)
         end = g[g.date == last].iloc[0]
         products.append({
             "sku": k, "name": end["name"], "category": end.category, "price": int(end.price),
