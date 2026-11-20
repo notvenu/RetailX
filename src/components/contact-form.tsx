@@ -6,7 +6,7 @@ import { useState } from "react";
 export const CONTACT_EMAIL = "hello@retailx.test";
 
 const field =
-  "mt-1.5 w-full rounded-[4px] border border-rule-strong bg-white px-3 py-2 text-[0.9rem] text-ink outline-none transition-colors duration-150 placeholder:text-ink-soft/70 focus:border-accent";
+  "mt-1.5 w-full rounded-sm border border-rule-strong bg-surface px-3 py-2 text-[0.9rem] text-ink outline-none transition-colors duration-150 placeholder:text-ink-soft/70 focus:border-accent";
 
 export function ContactForm() {
   const [opened, setOpened] = useState(false);
@@ -50,7 +50,7 @@ export function ContactForm() {
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:col-span-2">
         <button
           type="submit"
-          className="rounded-[4px] bg-accent px-4 py-2.5 text-[0.88rem] font-medium text-white transition-colors duration-150 hover:bg-accent-hover"
+          className="rounded-sm bg-accent px-4 py-2.5 text-[0.88rem] font-medium text-white transition-colors duration-150 hover:bg-accent-hover"
         >
           Write the email
         </button>

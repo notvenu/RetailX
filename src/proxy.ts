@@ -1,33 +1,27 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { canAccess } from "@/lib/access";
-import type { Role } from "@/lib/users";
 
-// the public site: readable signed in or out
-const PUBLIC = new Set(["/", "/features", "/how-it-works", "/about"]);
+// Public site and the two doors are open; everything else needs a session.
+// Per-area access (roles) is checked where the business is loaded: src/lib/session.ts.
+const PUBLIC = new Set(["/", "/features", "/how-it-works", "/about", "/forgot", "/reset", "/verify"]);
+const DOORS = new Set(["/signin", "/signup"]);
 
-export default auth((req) => {
+// Reads the session without the `auth(handler)` wrapper on purpose: the wrapper re-issues the session cookie on
+// every response, and a background prefetch still in flight at sign-out would bring the session back to life.
+export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const isLogin = pathname === "/login";
-  const session = req.auth;
   if (PUBLIC.has(pathname)) return NextResponse.next();
-
-  if (!session) {
-    if (isLogin) return NextResponse.next();
-    const url = new URL("/login", req.nextUrl);
+  const signedIn = !!(await auth())?.user?.businessId;
+  if (DOORS.has(pathname)) return signedIn ? NextResponse.redirect(new URL("/dashboard", req.nextUrl)) : NextResponse.next();
+  if (!signedIn) {
+    const url = new URL("/signin", req.nextUrl);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
-
-  if (isLogin) return NextResponse.redirect(new URL("/overview", req.nextUrl));
-
-  const role = session.user.role as Role;
-  if (!canAccess(role, pathname)) {
-    return NextResponse.redirect(new URL("/overview?denied=" + encodeURIComponent(pathname), req.nextUrl));
-  }
   return NextResponse.next();
-});
+}
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  // static files (icons, manifest, service worker) and API routes (which check their own auth) skip the gate
+  matcher: ["/((?!api|signout|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|ico|webmanifest|js)$).*)"],
 };

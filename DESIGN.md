@@ -22,7 +22,9 @@ shadows. One accent ink; semantic colour only for variance.
 | Adverse | `--color-bad` (+`-wash`) | `#b42318` |
 | Overlay shadow (dropdowns, mobile drawer only) | `--shadow-overlay` | `0 1px 2px …/06, 0 4px 12px …/10` |
 
-Light only (`color-scheme: light`) — back-office daytime use. No dark theme.
+Per-business theme (`src/lib/theme.ts`, injected as a `:root` style): accent (hover and wash derive via
+`color-mix`), light / dark / match device, density (root font size), font (Public Sans, IBM Plex Sans, Source
+Serif), corner radius (`--radius-sm/md/lg`), sidebar side. Surfaces use `--color-surface`, never `bg-white`.
 
 ## Type
 
@@ -43,14 +45,12 @@ Light only (`color-scheme: light`) — back-office daytime use. No dark theme.
 - **`charts.tsx`** — hand-rolled SVG, no library. `Sparkline`, `LineChart` (accent actual line,
   dashed prediction, `accent/8%` confidence band, hairline gridlines, forecast boundary marker),
   `BarComposition` (label · track · value rows).
-- **`CollectionPanel.tsx`** — client. Generic `CollectionPanel<T>` = section heading + inline
-  add-record form (field grid, required validation, grouped money inputs) + `DataTable`, backed by
-  `useCollection` (`localStorage` key `retailx:v1:<name>`, seed fallback, `Reset`). Per-module
-  presets (`SalesInvoices`, `InventoryProducts`, `PurchaseOrdersPanel`, `ExpensesPanel`,
-  `EmployeesPanel`) keep all `render`/`build` functions client-side; server pages pass only `role`.
-- **`shell/AppShell.tsx`** — 240px slate sidebar (wordmark, org, role, nav grouped
-  Overview/Operations/Intelligence, active item = white bg + 2px accent marker), 56px topbar
-  ("as of" context + user menu with sign-out), mobile drawer. `rx-rise` entrance on `<main>`.
+- **`RecordsPanel.tsx`** — client. Schema-driven register for any module: inline quick-entry form, edit,
+  search, pagination, CSV import/export. **`Dashboard.tsx`** — tile grid with drag/resize edit mode.
+- **`config/*`** — editors shared by onboarding and Settings (modules, KPIs, forecasts & analytics, AI roles,
+  automations, roles matrix, theme).
+- **`shell/AppShell.tsx`** — 240px sidebar (left or right) with nav built from the business's enabled modules
+  and the role's access, grouped by module group; 56px topbar (date + user menu); mobile drawer.
 
 ## Motion
 
@@ -59,13 +59,9 @@ choreography, no decorative motion.
 
 ## Data & access
 
-- Sample data only: `src/lib/mock.ts`. Formatters `src/lib/format.ts` (INR, `en-IN` grouping,
-  `₹x.xx L`/`Cr` compact). KPI helpers `src/lib/kpi.ts`.
-- Branch-evaluation engine `src/lib/branch.ts` — pure functions, three scenarios + recommendation +
-  sensitivity, self-check under `node src/lib/branch.ts`.
-- Roles Owner / Manager / Accountant / Employee. Route access map `src/lib/access.ts` drives both
-  `src/proxy.ts` (redirect) and the sidebar (`src/lib/nav.ts`). Auth: Auth.js v5 credentials,
-  `src/auth.ts`.
+- No seeded data. Businesses, users and records live in `src/lib/db.ts`; model in `src/lib/model.ts`.
+- Formatters `src/lib/format.ts` are currency/locale aware (`₹x.xx L`/`Cr` compact for INR).
+- Roles and access are per business; `src/lib/session.ts` checks every page and action.
 
 ## Direction contract
 
@@ -74,11 +70,10 @@ for this scoped internal Operate build; the world was committed inline.
 
 ## Public site (`src/app/(site)/`, Persuade)
 
-Same tokens, type and hairline grammar as the app; scale moves up. Text only, no figures or
-sample data (owner's call). Brief: `.impeccable/surfaces/src-app-site-page-tsx.md`.
+Same tokens, type and hairline grammar as the app; scale moves up. Text only, no figures. Brief: `.impeccable/surfaces/src-app-site-page-tsx.md`.
 
-- Routes: `/` Home, `/features`, `/how-it-works`, `/about` (contact). Public in `src/proxy.ts`;
-  the app's home is `/overview`; sign-in lands there.
+- Routes: `/` Home, `/features`, `/how-it-works`, `/about` (contact). Public in `src/proxy.ts`.
+  CTAs go to `/signup`; `/signin` for returning users; the app's home is `/dashboard`.
 - Form: an annual report. Statement h1 `clamp(2.6rem,5.6vw,4.1rem)`/600/`-0.042em`; inner-page
   h1 `clamp(2.3rem,4.6vw,3.4rem)`; chapter h2 `1.65rem` on a `rule-strong` hairline with a
   7/12 standfirst; body `0.9–1.1rem` in `ink-soft` (never `ink-faint`, which is 3:1).
@@ -86,7 +81,7 @@ sample data (owner's call). Brief: `.impeccable/surfaces/src-app-site-page-tsx.m
   native `<details>` menu below `md`), `PageIntro`, `Chapter`, `RuledList` (2px ink top rule,
   hairline rows), `NumberedNote` (light numeral in the margin, `#note-n` anchors),
   `Chain` (five ruled steps), `MODULES` copy shared by Home and Features, `Actions`
-  (indigo "Open the demo" + arrow text link). Contact: `contact-form.tsx` opens a mailto;
+  (indigo "Set up your business" + arrow text link). Contact: `contact-form.tsx` opens a mailto;
   `CONTACT_EMAIL` is a placeholder.
 - Motion: `.rx-post` draws the Home ruled list's rules in once (70 ms stagger, expo-out);
   `.rx-note:target` washes a cited note once. Both off under reduced motion.

@@ -1,4 +1,4 @@
-import { moneyCompact } from "@/lib/format";
+const plain = (n: number) => Math.round(n).toLocaleString("en-IN");
 
 /* ---------------- Sparkline ---------------- */
 
@@ -49,7 +49,7 @@ export function LineChart({
   points,
   showBand = false,
   showPredicted = false,
-  valueFormat = moneyCompact,
+  valueFormat = plain,
   height = 260,
 }: {
   points: LinePoint[];
@@ -58,6 +58,7 @@ export function LineChart({
   valueFormat?: (n: number) => string;
   height?: number;
 }) {
+  if (points.length < 2) return <p className="py-10 text-center text-[0.8rem] text-ink-faint">Not enough periods to draw a trend yet.</p>;
   const W = 760;
   const H = height;
   const padL = 56;
@@ -67,12 +68,13 @@ export function LineChart({
   const iw = W - padL - padR;
   const ih = H - padT - padB;
 
-  const all = points.flatMap((p) =>
+  const all0 = points.flatMap((p) =>
     [p.actual, p.predicted, p.lower, p.upper].filter((v): v is number => v != null),
   );
+  const all = all0.length ? all0 : [0];
   const min = Math.min(...all);
   const max = Math.max(...all);
-  const pad = (max - min) * 0.12 || 1;
+  const pad = (max - min) * 0.12 || Math.abs(max) * 0.1 || 1;
   const lo = min - pad;
   const hi = max + pad;
 
@@ -96,9 +98,9 @@ export function LineChart({
 
   let band = "";
   if (showBand) {
-    const up = points.map((p, i) => `${x(i).toFixed(1)},${y((p.upper ?? p.predicted ?? p.actual)!).toFixed(1)}`);
+    const up = points.map((p, i) => `${x(i).toFixed(1)},${y((p.upper ?? p.predicted ?? p.actual ?? lo)).toFixed(1)}`);
     const dn = points
-      .map((p, i) => `${x(i).toFixed(1)},${y((p.lower ?? p.predicted ?? p.actual)!).toFixed(1)}`)
+      .map((p, i) => `${x(i).toFixed(1)},${y((p.lower ?? p.predicted ?? p.actual ?? lo)).toFixed(1)}`)
       .reverse();
     band = `M${up.join(" L")} L${dn.join(" L")} Z`;
   }
@@ -150,7 +152,7 @@ export function LineChart({
       )}
 
       {points.map((p, i) =>
-        i % 2 === 0 || i === points.length - 1 ? (
+        i % Math.max(1, Math.ceil(points.length / 12)) === 0 || i === points.length - 1 ? (
           <text
             key={`l${i}`}
             x={x(i)}
@@ -171,7 +173,7 @@ export function LineChart({
 
 export function BarComposition({
   items,
-  format = moneyCompact,
+  format = plain,
 }: {
   items: { label: string; value: number; hint?: string }[];
   format?: (n: number) => string;
@@ -180,11 +182,11 @@ export function BarComposition({
   return (
     <ul className="flex flex-col gap-2.5">
       {items.map((it) => (
-        <li key={it.label} className="grid grid-cols-[10rem_1fr_auto] items-center gap-3 text-[0.8rem]">
+        <li key={it.label} className="grid grid-cols-[minmax(0,9rem)_1fr_auto] items-center gap-3 text-[0.8rem]">
           <span className="truncate text-ink-soft">{it.label}</span>
-          <span className="h-2 rounded-[2px] bg-panel-deep">
+          <span className="h-2 rounded-sm bg-panel-deep">
             <span
-              className="block h-full rounded-[2px] bg-accent/75"
+              className="block h-full rounded-sm bg-accent/75"
               style={{ width: `${Math.max(2, (it.value / max) * 100)}%` }}
             />
           </span>

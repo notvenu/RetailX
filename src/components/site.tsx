@@ -21,13 +21,13 @@ export function Wrap({ children, className = "" }: { children: ReactNode; classN
   return <div className={`mx-auto w-full max-w-[1120px] px-5 sm:px-8 ${className}`}>{children}</div>;
 }
 
-export function DemoButton() {
+export function StartButton() {
   return (
     <Link
-      href="/login"
-      className="inline-flex items-center rounded-[4px] bg-accent px-4 py-2.5 text-[0.9rem] font-medium text-white transition-colors duration-150 hover:bg-accent-hover"
+      href="/signup"
+      className="inline-flex items-center rounded-sm bg-accent px-4 py-2.5 text-[0.9rem] font-medium text-white transition-colors duration-150 hover:bg-accent-hover"
     >
-      Open the demo
+      Set up your business
     </Link>
   );
 }
@@ -47,7 +47,7 @@ export function TextLink({ href, children }: { href: string; children: ReactNode
 export function Actions({ link }: { link?: { href: string; label: string } }) {
   return (
     <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
-      <DemoButton />
+      <StartButton />
       {link ? <TextLink href={link.href}>{link.label}</TextLink> : null}
     </div>
   );
@@ -70,7 +70,7 @@ export function SiteFooter() {
       <Wrap className="flex flex-wrap items-end justify-between gap-6 py-10 text-[0.84rem]">
         <div>
           <Wordmark />
-          <p className="mt-2 text-ink-soft">One set of books for every branch.</p>
+          <p className="mt-2 text-ink-soft">The operating system for small business.</p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-ink-soft">
           {SITE_LINKS.map((l) => (
@@ -78,7 +78,7 @@ export function SiteFooter() {
               {l.label}
             </Link>
           ))}
-          <Link href="/login" className="hover:text-ink">
+          <Link href="/signin" className="hover:text-ink">
             Sign in
           </Link>
         </nav>
@@ -162,11 +162,11 @@ export function NumberedNote({ n, title, children }: { n: number; title: string;
 
 /** The five-step chain from a transaction to a decision. */
 const CHAIN = [
-  { title: "Record", body: "Invoices, goods received, purchase orders, payroll and expenses, entered where the work happens." },
-  { title: "Consolidate", body: "Every branch posts to one set of books, closed monthly." },
-  { title: "Measure", body: "Margins, turnover, stock-outs and costs, each against target and the month before." },
-  { title: "Forecast", body: "The months ahead with a stated range, and each product's demand for the next fortnight." },
-  { title: "Decide", body: "A recommendation with scenarios, risk and the assumptions that move it." },
+  { title: "Describe", body: "Sign up and tell us your industry, category and how you work. Ten short steps, about five minutes." },
+  { title: "Shape", body: "Get modules, KPIs, forecasts and an AI team suggested for businesses like yours. Change any of it." },
+  { title: "Record", body: "Enter sales, stock, costs and people in quick forms, or import your spreadsheets in one paste." },
+  { title: "Understand", body: "KPIs against target, what moved them, unusual days, and forecasts that prove their accuracy." },
+  { title: "Act", body: "Your AI CFO, COO and GM coach you, raise tasks and run the automations you approve." },
 ];
 
 export function Chain() {
@@ -183,48 +183,84 @@ export function Chain() {
   );
 }
 
-/** The seven modules, shared by Home and Features. */
+/** What the platform does, shared by Home and Features. */
 export const MODULES = [
   {
-    title: "Finance and accounting",
-    short: "A monthly P&L across branches, with every line against target and the month before.",
-    long: "Revenue, cost of goods and operating expenses post to one monthly P&L for the whole business, built from the branch books. Every line is compared with its target and with the month before, so a slipping margin is visible the month it slips.",
-    keeps: ["Trailing twelve-month P&L", "Expense register by category", "Receivables ageing", "KPI register with targets"],
+    title: "Onboarding built around your trade",
+    short: "Fourteen industries, their categories, and the questions that decide what you need.",
+    long: "Pick your industry and category, say whether you keep stock, sell on credit, pay salaries or run several locations, and name this year's goals. The workspace is assembled from those answers: a pharmacy gets expiry dates, a restaurant a daily register with food cost, an agency timesheets and a pipeline.",
+    keeps: ["14 industries, 70+ categories", "Category-specific fields", "Goal-driven KPI priorities", "Live preview while you answer"],
   },
   {
-    title: "Sales and customers",
-    short: "Invoices, customer balances and revenue by branch in one register.",
-    long: "Invoices by branch and customer, wholesale balances still owed, average bill and sales against target. A slow branch shows up before the quarter closes, not after.",
-    keeps: ["Invoice register with payment status", "Wholesale and contract customers", "Revenue and margin by branch"],
+    title: "A billing counter that never stops",
+    short: "Scan, speak or search; bill in cash, UPI, card or credit; keep selling when the internet drops.",
+    long: "A keyboard-first counter with several bills open at once. Scan a barcode with a scanner or the phone camera, or say \u201c3 milk\u201d. Take cash, UPI with a QR for the exact amount, card or credit with a limit per customer, loyalty points, returns against the original bill and quotations billed in one click. If the connection drops, bills wait on the device and are sent exactly once when it returns. Receipts print on 58 or 80 mm paper, invoices on A4 in three layouts.",
+    keeps: ["Offline billing", "Returns and credit notes", "Loyalty points and credit limits", "Day close with cash count"],
   },
   {
-    title: "Stock and purchasing",
-    short: "Stock against reorder levels, and how much of each product to order next.",
-    long: "Stock on hand against reorder levels, purchase orders by supplier, and a demand forecast for every product in every branch. The suggested order covers that forecast plus safety stock, so shelves stay full without tying cash up in the storeroom.",
-    keeps: ["Stock status by product", "Purchase orders and supplier terms", "Demand forecast and suggested orders"],
+    title: "Offers, expiry and stock rules",
+    short: "Coupons, combos and near-expiry discounts; first-expiry-first-out; wholesale prices; limits per cashier.",
+    long: "Coupons, combos and near-expiry offers apply by themselves and are priced again on the server. Insights suggests the discount that clears a batch before it expires, never below cost plus 5%. A scan sells the batch that expires first, expired stock is refused, wholesale prices start from a minimum quantity, and each role can have a maximum discount that the owner can lift with a PIN. Move stock between branches and warehouses.",
+    keeps: ["Coupons and combos", "Batch and expiry", "Wholesale and customer rates", "Cashier limits and owner PIN"],
   },
   {
-    title: "People and payroll",
-    short: "Employees, payroll runs and access that follows each person's job.",
-    long: "Employees, monthly payroll runs and headcount by branch. Four roles decide what each person can open: owners and managers see everything, the accountant sees the finance books, and floor staff see sales and stock.",
-    keeps: ["Employee register", "Payroll runs with approval", "Role-based access on every page"],
+    title: "Modules you can reshape",
+    short: "Switch registers on, rename them, reorder the sidebar, and add your own fields or whole modules.",
+    long: "Every module is a register you control: add a field, make one required, turn a text box into a choice list, change what dates a record, or build a module from scratch for the thing only your business tracks. Quick-entry forms, search, edit, CSV import and export come with every one.",
+    keeps: ["24 ready-made registers", "Custom fields and modules", "Spreadsheet import and export", "Sidebar order and grouping"],
   },
   {
-    title: "Forecasting",
-    short: "The months ahead with a stated range, and the model's own track record beside it.",
-    long: "Revenue for the months ahead with a range that widens the further out it looks, drawn beside recent actuals and what the model predicted for each of them. A forecast that carries its own track record is one you can plan against.",
-    keeps: ["Revenue forecast with range", "Back-test against recent months", "Forecast versus actual, month by month"],
+    title: "KPIs you define",
+    short: "A library of 55 measures, or build your own formula from any module's fields.",
+    long: "Pick from a library matched to your modules, set targets, and say whether higher or lower is better. Or compose your own: totals, counts and averages of any field, filtered by any condition, combined in a formula, for example repeat-customer share or margin on a single category.",
+    keeps: ["Targets and variance", "Formula builder with filters", "Any period: day to year", "Comparison with last period or last year"],
   },
   {
-    title: "Analytics and anomaly checks",
-    short: "A daily check on every branch, so an odd day is seen the week it happens.",
-    long: "Each branch's revenue, margin, discount, footfall, shrinkage and stock-outs are checked every day against the same weekday. Days that fall well outside the usual range go to a log with the expected value and the day-book note beside them.",
-    keeps: ["KPI drill-down by branch", "Branch health score", "Anomaly log with severity"],
+    title: "Forecasting that shows its working",
+    short: "Ten models compete on your own history; the most accurate wins, with a range and its track record.",
+    long: "Naive baselines, moving averages, exponential smoothing, damped trend, Holt-Winters and seasonal regression are each back-tested on your data with a rolling origin. You see every model's error, the one chosen, a confidence range, and what-if scenarios. Pick the horizon, granularity, seasonality and model yourself if you prefer.",
+    keeps: ["Rolling-origin back-test", "sMAPE, MASE, RMSE, bias", "Confidence ranges", "What-if scenarios"],
   },
   {
-    title: "Branch opening evaluation",
-    short: "A tested answer on whether a new branch will pay back.",
-    long: "Enter a site's investment, rent, staffing and expected sales, and get ROI, ROCE, break-even and payback across conservative, base and optimistic cases, with the assumptions that move the answer most, before the lease is signed.",
-    keeps: ["Three scenarios with a recommendation", "Sensitivity of payback to each assumption", "Break-even and cash-flow impact"],
+    title: "Insights and a restock autopilot",
+    short: "Who owes you, what is not selling, what to reorder and why; and orders placed within limits you set.",
+    long: "Dues by age with a WhatsApp reminder per customer, stock that has not sold, products that will expire before they sell, supplier scorecards, best customers and counter exceptions. Each reorder shows its demand, safety stock and reason, and a what-if simulator shows the effect of a late supplier. The autopilot can place routine orders from suppliers you tick, under a weekly cap, never twice for the same item, and never pays anyone.",
+    keeps: ["Dues and overdue bills", "Plain-language reorder reasons", "What-if simulator", "Autopilot with guardrails"],
+  },
+  {
+    title: "Analytics that explains",
+    short: "Not just what happened: which category, channel or location moved it, and which days were unusual.",
+    long: "A KPI register against target and prior period, drill-down at any granularity, breakdowns you configure, a driver analysis that finds the groups behind a change, and an anomaly log that flags days far from their usual weekday level at a sensitivity you set.",
+    keeps: ["Driver analysis", "Configurable breakdowns", "Anomaly log", "Day to year views"],
+  },
+  {
+    title: "Books and GST",
+    short: "Profit and loss, balance sheet and trial balance from the records you already keep; GST files and Tally.",
+    long: "Every bill, purchase, expense, pay run and payment is posted to the books for you, so the trial balance always balances. Add payments with TDS and cheques, journal entries, fixed assets with depreciation and a bank statement to reconcile. File-ready outputs: GSTR-1 and GSTR-9 summaries, e-way bill JSON, TCS and Form 27EQ, export to and import from Tally, and a Verify my data check that finds problems before your accountant does.",
+    keeps: ["Profit & loss, balance sheet", "Bank reconciliation", "GSTR-1, GSTR-9, e-way bill", "Tally export and import"],
+  },
+  {
+    title: "An AI leadership team",
+    short: "A CFO, COO, CTO, Head of People and General Manager, or roles you invent, each coaching from your numbers.",
+    long: "Each AI role has a mandate, responsibilities, the KPIs it owns and an autonomy level you choose: advise only, draft for your approval, or act. They read your books through the same KPIs you see, answer in plain language, create tasks, draft or switch on automations, and work through tasks you assign them.",
+    keeps: ["Default and custom roles", "Advise, draft or act", "Briefings from live KPIs", "Works on assigned tasks"],
+  },
+  {
+    title: "Automations and tasks",
+    short: "When a record is saved, on a schedule, or when a KPI crosses a line: create a task, notify, or update the record.",
+    long: "Chase every unpaid bill, reorder when stock hits its level, review large expenses, alert when margin drops. Build automations in plain terms, or let an AI role draft them. Tasks land on a board for people or AI roles, with due dates and results.",
+    keeps: ["Record, schedule and KPI triggers", "Conditions with field references", "Tasks for people or AI", "Activity log"],
+  },
+  {
+    title: "Your workspace, your way",
+    short: "Drag and resize dashboard tiles, choose colours, dark mode, type, density and sidebar side.",
+    long: "The dashboard is a grid of tiles you arrange: KPIs, trends, forecasts, breakdowns, latest records, tasks, an AI briefing or a note, each one sized and placed where you want it. The theme follows your brand, and every person signs in with their own email, phone or username tied to one role.",
+    keeps: ["Drag-and-drop dashboard", "Accent, dark mode, fonts", "Role-based access", "One login per person"],
+  },
+  {
+    title: "Optional features you switch on",
+    short: "Product certificates and nutrition labels, chosen at set-up or later in Settings.",
+    long: "Some businesses need more on each product. Switch on certificates to keep a lab report, FSSAI or ISI link with who issued it and until when, and be warned before it runs out. Switch on nutrition labels for ingredients, nutrition per serving, a veg mark, allergens and FSSAI number, printed as pack labels with a QR to the certificate. Switching a feature off hides its fields and keeps what you entered. Scan a supplier\u2019s bill with your phone to fill a stock-in.",
+    keeps: ["Certificates with expiry warnings", "Nutrition and pack labels", "On or off any time", "Supplier-bill scanning"],
   },
 ];

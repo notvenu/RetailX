@@ -8,47 +8,39 @@ web
 
 ## Stack
 
-delegated: Next.js (App Router, TypeScript) + Tailwind CSS v4 + Auth.js (NextAuth v5, credentials) + Lucide icons. No chart or component library — tables and SVG charts are hand-built. Chosen to match the team's proposed React/Node direction while keeping the prototype a single deployable frontend with in-repo mock data. This build is the frontend only; data is mock fixtures in `src/lib/mock`.
+Next.js (App Router, TypeScript) + Tailwind CSS v4 + Auth.js (credentials, identifier = email/phone/username) + Lucide icons + Anthropic SDK for AI roles. Hand-built SVG charts and a TypeScript forecasting engine; no chart or ML libraries. Data lives in a server-side JSON store (`src/lib/db.ts`).
 
 ## Users
 
-- **SME owner / manager** — checks financial position and operational health between other work, mostly on a laptop in a back office under daytime light. Wants a reliable single view and a defensible answer to "should we open a branch".
-- **Accountant / finance staff** — works in Finance, Sales, Procurement and Analytics; needs dense, accurate figures with variance against target and prior period.
-- **Employee** — limited role; sees Sales, Inventory and their HR record, not Finance or Decision Support.
+- **Owner** of a micro, small or medium business: signs up, runs onboarding, shapes the workspace, and works with the AI leadership team.
+- **Team members** (manager, accountant, staff, or custom roles): sign in with their own email, phone or username, which carries their role; see only what that role can open.
 
 ## Product Purpose
 
-An integrated SME ERP prototype that records core business transactions (Finance, Sales/CRM, Inventory, Procurement, HR/Payroll) and adds an analytics, forecasting and decision-support layer on top of that data. Success is demonstrating the full flow transaction → consolidated data → KPIs → forecast → decision support, with a flagship "new branch opening" financial evaluation (investment, ROI, ROCE, break-even, payback, conservative/base/optimistic scenarios).
+A service for MSMEs: sign up, describe the business, and get a workspace built around it (modules, KPIs, forecasts, analytics, automations, AI roles), all customisable afterwards. Success is an owner going from sign-up to recorded data, trustworthy KPIs and useful AI coaching without configuration help.
 
 ## Positioning
 
-Not a dashboard bolted onto spreadsheets, and not a clone of a large enterprise ERP. The ERP layer supplies structured, traceable business data; the analytics layer explains and forecasts it; the decision layer turns it into a scenario-tested recommendation. The branch-opening evaluation engine is the differentiator.
-
-## Operating Context
-
-Back-office use on desktop/laptop. Role-based access gates Finance, HR and Decision Support. Periods are monthly; figures are reported against target and previous period. Currency is per-organization. The prototype ships with one seeded single-store organization, with a second store under evaluation.
+Not a generic ERP and not a dashboard bolted onto spreadsheets. Industry presets get a business to a working system in minutes; everything stays editable. The AI leadership team (CFO, COO, CTO, Head of People, GM, or custom roles) coaches from the business's own numbers and acts only within the autonomy the owner grants.
 
 ## Capabilities and Constraints
 
-- Modules (prototype scope, shallow): Finance & Accounting, Sales & CRM, Inventory & Procurement, HR & Payroll, Analytics & Forecasting, Decision Support, Branch Opening Evaluation.
-- Core KPI set from the brief: Total Revenue, Revenue Growth %, Gross Profit / Margin %, Operating Expenses, Operating Profit / Margin %, Net Profit / Margin %, Sales Target Achievement %, Average Bill Value, Revenue per Customer/Employee, Inventory Turnover, DIO, Stock-out Rate %, ROCE, Break-even Achievement %, Payback Period, Cash Conversion Cycle, Store/Branch Health Score.
-- Analytics answers four levels: descriptive, diagnostic, predictive, prescriptive.
-- Branch evaluation inputs: initial investment, rent + deposit, store size, expected monthly sales, expected gross margin, employee count + payroll, utilities + operating expenses, marketing/launch cost, expected growth, financing cost. Outputs: revenue, gross/operating profit + margin, break-even point + achievement %, ROI, ROCE, payback, cash-flow impact, three scenarios, key risk factors + recommendation.
-- Auth: NextAuth credentials against mock users; roles Owner, Manager, Accountant, Employee. No real backend in this build.
-- Data entry: role-appropriate "add record" forms on Sales (invoices), Inventory (products), Procurement (POs), Finance (logged expenses) and HR (employees). Submitted records persist to `localStorage` per browser (there is no server); a per-panel Reset restores the seed data.
-
-## Evidence on Hand
-
-- Source brief: `RetailX_First_Project_Review (1).pdf` (project overview, modules, KPI framework, flagship evaluation spec, DB schema, system design).
-- The seeded organisation is Nandan Provisions, an illustrative single-store neighbourhood supermarket (Baner Road, Pune; Udyam micro enterprise) with realistic, hand-authored books for September 2026 in detail and monthly closes from October 2025 (`ml/data/`). It is not a real company: the app carries one quiet "Illustrative business" note in the shell rather than "sample data" on every page. Do not invent claims beyond these books.
+- 14 industries with categories; category-specific fields (expiry for pharmacies, sizes for apparel), location fields for multi-branch businesses.
+- 18 module templates plus custom modules and fields; quick entry, CSV import/export.
+- KPI library (~55) and a formula builder over any module's fields with filters; targets; like-for-like comparison while a period is in progress.
+- Forecasting: 10 models, rolling-origin back-test, intervals, scenarios, configurable grain/horizon/season/model.
+- Analytics: KPI register, drill-down, driver analysis, breakdowns, robust anomaly detection.
+- AI roles with mandate, KPIs, tone and autonomy (advise/draft/act); tools to read the books, create tasks, draft or enable automations, set targets. Rule-based briefings without an API key.
+- Automations on record save, schedule or KPI threshold; tasks for people or AI roles.
+- Theme (accent, dark mode, density, font, corners, sidebar side) and a drag-and-resize dashboard.
 
 ## Product Principles
 
-1. Figures before charts — state the number and its variance first; visuals support, they don't lead.
-2. Every screen is traceable back to source transactions; analytics never invents data the ERP layer can't produce.
-3. Decisions come with scenarios and risk, never a single point estimate.
-4. Role determines what is visible; finance and people data are not shown to roles that shouldn't see them.
-5. Consistency over novelty — the same table, form and control vocabulary on every module.
+1. Figures before charts: state the number and its variance first.
+2. Every figure traces to recorded transactions; AI never invents numbers.
+3. Forecasts show their back-test error and say when they are no better than naive.
+4. Role determines what is visible, on every page, action and dashboard tile.
+5. Presets are a starting point; the owner can change everything.
 
 ## Accessibility & Inclusion
 

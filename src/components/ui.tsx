@@ -16,7 +16,7 @@ export function PageHeader({
   return (
     <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-rule pb-4">
       <div>
-        <h1 className="text-[1.35rem] font-semibold tracking-[-0.02em] text-ink">
+        <h1 suppressHydrationWarning className="text-[1.35rem] font-semibold tracking-[-0.02em] text-ink">
           {title}
         </h1>
         {meta ? (
@@ -138,12 +138,12 @@ export function FigureRow({ children }: { children: ReactNode }) {
 /* ---------------- status ---------------- */
 
 const STATUS_TONE: Record<string, "good" | "warn" | "bad" | "flat"> = {
-  Paid: "good", Received: "good", Active: "good", Healthy: "good", Approved: "good",
-  Resolved: "good", Proceed: "good", Normal: "good",
-  "Part-paid": "warn", "In transit": "warn", "Ramp-up": "warn", Reorder: "warn",
-  Investigating: "warn", Probation: "warn", "Proceed with conditions": "warn", Open: "warn",
-  Unpaid: "bad", Overdue: "bad", Critical: "bad", "Do not proceed": "bad",
-  High: "bad", Medium: "warn", Low: "flat",
+  Paid: "good", Received: "good", Active: "good", Completed: "good", Delivered: "good", Won: "good", Confirmed: "good",
+  "Checked-in": "good", Done: "good", done: "good", Yes: "good", good: "good",
+  "Part-paid": "warn", Ordered: "warn", Shipped: "warn", Placed: "warn", Proposal: "warn", Contacted: "warn", Probation: "warn",
+  Pending: "warn", Booked: "warn", "On hold": "warn", "On leave": "warn", doing: "warn", watch: "warn", New: "warn",
+  "Order now": "bad", "Order soon": "warn", Enough: "good",
+  Unpaid: "bad", Overdue: "bad", "No-show": "bad", Returned: "bad", Lost: "bad", Cancelled: "bad", Dropped: "bad", No: "bad", bad: "bad",
 };
 
 export function StatusPill({ children }: { children: string }) {
@@ -156,7 +156,7 @@ export function StatusPill({ children }: { children: string }) {
   }[t];
   return (
     <span
-      className={`inline-flex items-center rounded-[3px] border px-1.5 py-0.5 text-[0.7rem] font-medium leading-none ${cls}`}
+      className={`inline-flex items-center rounded-sm border px-1.5 py-0.5 text-[0.7rem] font-medium leading-none ${cls}`}
     >
       {children}
     </span>
@@ -254,5 +254,116 @@ export function KeyValue({ items }: { items: { k: string; v: ReactNode }[] }) {
 export function Note({ children }: { children: ReactNode }) {
   return (
     <p className="text-[0.75rem] leading-relaxed text-ink-faint">{children}</p>
+  );
+}
+
+/* ---------------- controls ---------------- */
+
+export const control =
+  "min-w-0 rounded-sm border border-rule-strong bg-surface px-2.5 py-1.5 text-[0.84rem] text-ink outline-none transition-colors focus-visible:border-accent";
+export const btn =
+  "inline-flex items-center justify-center gap-1.5 rounded-sm px-3.5 py-1.5 text-[0.82rem] font-medium transition-colors disabled:opacity-50";
+export const btnPrimary = `${btn} bg-accent text-white hover:bg-accent-hover`;
+export const btnGhost = `${btn} border border-rule-strong text-ink-soft hover:border-accent hover:text-accent`;
+export const btnQuiet = `${btn} text-ink-soft hover:bg-panel hover:text-ink`;
+
+export function Label({ text, hint, children }: { text: string; hint?: ReactNode; children: ReactNode }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-ink-soft">{text}</span>
+      {children}
+      {hint ? <span className="text-[0.72rem] text-ink-faint">{hint}</span> : null}
+    </label>
+  );
+}
+
+export function Empty({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <div className="border border-dashed border-rule-strong px-6 py-10 text-center">
+      <p className="text-[0.9rem] font-medium text-ink">{title}</p>
+      {children ? <div className="mx-auto mt-2 max-w-md text-[0.8rem] leading-relaxed text-ink-soft">{children}</div> : null}
+    </div>
+  );
+}
+
+/** Just enough markdown for AI replies: paragraphs, `- ` bullets, **bold**, `code`. Text only, no HTML. */
+export function Prose({ text }: { text: string }) {
+  const inline = (s: string) =>
+    s.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, i) =>
+      part.startsWith("**") ? <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong>
+        : part.startsWith("`") ? <code key={i} className="rounded-sm bg-panel px-1 text-[0.78rem] text-ink">{part.slice(1, -1)}</code>
+        : part,
+    );
+  const blocks = text.trim().split(/\n{2,}/);
+  return (
+    <div className="space-y-2.5 text-[0.84rem] leading-relaxed text-ink-soft">
+      {blocks.map((b, i) => {
+        const lines = b.split("\n");
+        if (lines.every((l) => /^\s*([-*•]|\d+\.)\s/.test(l)))
+          return (
+            <ul key={i} className="list-disc space-y-1 pl-5 marker:text-ink-faint">
+              {lines.map((l, j) => <li key={j}>{inline(l.replace(/^\s*([-*•]|\d+\.)\s/, ""))}</li>)}
+            </ul>
+          );
+        return (
+          <p key={i}>
+            {lines.map((l, j) => (
+              <span key={j}>{j ? <br /> : null}{/^\s*[-*•]\s/.test(l) ? "• " : ""}{inline(l.replace(/^#+\s*/, "").replace(/^\s*[-*•]\s/, ""))}</span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------------- choice controls (used inside client components) ---------------- */
+
+export function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
+      onClick={() => onChange(!on)}
+      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${on ? "bg-accent" : "bg-rule-strong"}`}
+    >
+      <span className={`absolute top-0.5 size-4 rounded-full bg-surface shadow transition-[left] ${on ? "left-[18px]" : "left-0.5"}`} />
+    </button>
+  );
+}
+
+export function Segmented<T extends string | number>({ value, options, onChange, label }: {
+  value: T; options: { value: T; label: string }[]; onChange: (v: T) => void; label: string;
+}) {
+  return (
+    <div role="radiogroup" aria-label={label} className="inline-flex flex-wrap gap-1 rounded-sm border border-rule-strong bg-panel/60 p-0.5">
+      {options.map((o) => (
+        <button
+          key={String(o.value)}
+          type="button"
+          role="radio"
+          aria-checked={o.value === value}
+          onClick={() => onChange(o.value)}
+          className={`rounded-sm px-2.5 py-1 text-[0.78rem] transition-colors ${o.value === value ? "bg-surface font-medium text-ink shadow-[0_1px_2px_rgba(16,24,40,0.08)]" : "text-ink-soft hover:text-ink"}`}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1 text-[0.78rem] transition-colors ${on ? "border-accent bg-accent-wash text-accent" : "border-rule-strong text-ink-soft hover:border-ink-faint hover:text-ink"}`}
+    >
+      {children}
+    </button>
   );
 }

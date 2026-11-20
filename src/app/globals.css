@@ -10,9 +10,16 @@
   --color-rule: #e5e7eb;
   --color-rule-strong: #d3d7de;
 
+  --color-surface: #ffffff;
+
+  /* the business's accent; hover and wash are derived so one value re-themes everything */
   --color-accent: #3538cd;
-  --color-accent-hover: #2c2fb3;
-  --color-accent-wash: #eef0fc;
+  --color-accent-hover: color-mix(in oklab, var(--color-accent) 84%, black);
+  --color-accent-wash: color-mix(in oklab, var(--color-accent) 9%, var(--color-paper));
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
 
   --color-good: #067647;
   --color-good-wash: #ecfdf3;
@@ -28,6 +35,7 @@
 
 html {
   color-scheme: light;
+  font-size: var(--rx-base, 16px);
 }
 
 body {

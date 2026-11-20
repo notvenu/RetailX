@@ -4,16 +4,16 @@ import { Actions, MODULES, NumberedNote, PageIntro, Wrap } from "@/components/si
 
 export const metadata: Metadata = {
   title: "Features — RetailX",
-  description: "The seven modules of RetailX: finance, sales, stock, payroll, forecasting, analytics and branch evaluation.",
+  description: "What RetailX does: an offline billing counter, offers and expiry, books and GST, insights with a restock autopilot, forecasting, analytics, an AI leadership team, automations and a workspace you arrange.",
 };
 
 export default function FeaturesPage() {
   return (
     <>
-      <PageIntro title="Notes to the accounts">
+      <PageIntro title="Everything it does">
         <p>
-          The seven modules of RetailX. They share one set of records, so what one module keeps, every other module
-          can read.
+          Thirteen capabilities that share one set of records. Each starts from what businesses in your industry need,
+          and each can be changed by you.
         </p>
       </PageIntro>
 

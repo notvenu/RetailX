@@ -45,10 +45,18 @@ next-env.d.ts
 
 _state.json
 _shots.mjs
-.impeccable/review/
+.impeccable/
 
-# ml downloads + trained models
-ml/raw/
-ml/models/
 .playwright-mcp/
 __pycache__/
+
+# per-instance data store (users, businesses, records)
+/.data/
+
+# old ML pipeline leftovers (local downloads and trained models, never committed)
+ml/
+
+# e2e output
+/test-results/
+/playwright-report/
+!.env.example

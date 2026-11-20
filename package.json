@@ -5,20 +5,30 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "playwright test",
+    "check": "node --no-warnings src/lib/metrics.ts && node --no-warnings src/lib/forecast.ts && node --no-warnings src/lib/gst.ts && node --no-warnings src/lib/planning.ts && node --no-warnings src/lib/importers.ts && node --no-warnings src/lib/sample.ts && node --no-warnings src/lib/branch.ts && node --no-warnings src/lib/benchmarks.ts && node --no-warnings src/lib/pos.ts && node --no-warnings src/lib/insights.ts && node --no-warnings src/lib/payroll.ts && node --no-warnings src/lib/autoorder.ts && node --no-warnings src/lib/offers.ts && node --no-warnings src/lib/books.ts && node --no-warnings src/lib/billparse.ts && node --no-warnings src/lib/extras.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@libsql/client": "^0.18.0",
     "lucide-react": "^1.42.0",
     "next": "16.3.4",
     "next-auth": "^5.0.0-beta.32",
+    "qrcode": "^1.5.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tesseract.js": "^7.0.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

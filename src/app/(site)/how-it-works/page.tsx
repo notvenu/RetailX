@@ -4,38 +4,45 @@ import { Actions, Chain, Chapter, PageIntro } from "@/components/site";
 export const metadata: Metadata = {
   title: "How it works — RetailX",
   description:
-    "How RetailX turns recorded transactions into forecasts, anomaly checks and branch recommendations, how each model is tested, and where it stops being reliable.",
+    "How RetailX builds a workspace from your onboarding answers, how its forecasts are chosen and tested, and how AI roles coach and act.",
 };
 
-const MODELS = [
+const PARTS = [
   {
-    title: "Revenue forecast",
-    summary: "The months ahead for the whole business, with a range that widens the further out it looks.",
+    title: "Onboarding",
+    summary: "Ten short steps that turn a description of your business into a working system.",
     rows: [
-      { k: "Method", v: "Holt's exponential smoothing with a damped trend" },
-      { k: "Reads", v: "Consolidated monthly revenue" },
-      { k: "Tested by", v: "Predicting each recent month using only the months before it, then comparing with what happened" },
-      { k: "Limits", v: "With under two years of history it cannot learn the yearly festival pattern, so festival months need a manual plan beside it." },
+      { k: "Asks", v: "Business basics, industry and category, whether you keep stock, sell on credit, pay salaries, how many locations, how you sell, and this year's goals" },
+      { k: "Builds", v: "Modules with the right fields, KPIs ordered by your goals, forecasts on your headline number, AI roles, starter automations, team roles and a dashboard" },
+      { k: "You change", v: "Everything, before launch and any time after in Settings: switch modules, edit fields, build KPIs, hire AI roles, set access, pick a theme" },
     ],
   },
   {
-    title: "Anomaly checks",
-    summary: "A daily look over every branch's shoulder, so an odd day is seen the week it happens.",
+    title: "Forecasting",
+    summary: "Ten models compete on your own history; the one with the smallest error on data it never saw wins.",
     rows: [
-      { k: "Method", v: "Each metric compared with the same weekday on the month's other ordinary days, and the gap scored against the usual spread" },
-      { k: "Reads", v: "Revenue, gross margin, discount, footfall, shrinkage and stock-outs, per day; festival days skipped" },
-      { k: "Tested by", v: "Incidents logged in the day book: how many it catches, and how often it raises a false alarm" },
-      { k: "Limits", v: "Margin and discount problems stand out clearly; small changes in footfall or shrinkage can hide in normal noise." },
+      { k: "Models", v: "Naive, seasonal naive, drift, long-run mean, moving average, exponential smoothing, damped trend, Holt-Winters (additive and multiplicative), trend + season regression" },
+      { k: "Tested by", v: "Rolling-origin back-test: forecast from several past points using only earlier data, compare with what happened, score by sMAPE, MASE, RMSE or MAE" },
+      { k: "You set", v: "What to forecast, daily to quarterly, how far ahead, seasonality, confidence range, log transform, and what-if scenarios" },
+      { k: "Limits", v: "Short histories give wide ranges, and the page says so. When a model can't beat simply repeating last period, you're told to treat it as a rough range." },
     ],
   },
   {
-    title: "Demand and reorder",
-    summary: "How many of each product each branch will need over the next fortnight, and how much to order.",
+    title: "Analytics",
+    summary: "KPIs explained, not just reported.",
     rows: [
-      { k: "Method", v: "Average demand for each weekday on ordinary days, with safety stock sized from how much demand varies" },
-      { k: "Reads", v: "Units sold plus sales lost to empty shelves, so it forecasts demand rather than what happened to be in stock" },
-      { k: "Tested by", v: "Holding back the last week and comparing with a simple rule: the same weekday a week earlier" },
-      { k: "Limits", v: "Festivals are left out of the average, so festival weeks need their own order plan." },
+      { k: "Measures", v: "Each KPI is a formula over totals, counts or averages of your records, filtered as you choose, for any period from a day to a year" },
+      { k: "Explains", v: "Driver analysis splits the change between the last two periods by category, channel, location or any other field" },
+      { k: "Watches", v: "Days far from their usual weekday level, scored by a robust z-score at the sensitivity you set" },
+    ],
+  },
+  {
+    title: "AI roles",
+    summary: "A leadership team that reads your books and works within limits you set.",
+    rows: [
+      { k: "Each has", v: "A mandate, responsibilities, the KPIs it owns, a tone, and an autonomy level: advise, draft or act" },
+      { k: "Can", v: "Read KPIs, trends, records and forecasts; create and complete tasks; draft or switch on automations; set targets (act level only)" },
+      { k: "Won't", v: "Quote a figure the books can't produce. Without an AI key, roles still give rule-based briefings from your KPIs." },
     ],
   },
 ];
@@ -43,23 +50,17 @@ const MODELS = [
 export default function HowItWorksPage() {
   return (
     <>
-      <PageIntro title="From a sale to a decision">
-        <p>
-          How RetailX turns the transactions a shop records into forecasts, checks and recommendations, how each
-          model is tested, and where it stops being reliable.
-        </p>
+      <PageIntro title="From sign-up to decisions">
+        <p>How RetailX builds a workspace from your answers, how it measures and forecasts, and how your AI team coaches and acts.</p>
       </PageIntro>
 
-      <Chapter title="The chain" lede="Every report is built in this order, from the records up.">
+      <Chapter title="The path" lede="Every business goes through the same five steps, in this order.">
         <Chain />
       </Chapter>
 
-      <Chapter
-        title="The models"
-        lede="Three models read the books. Each is tested on data it never saw, and each has limits worth knowing before you act on it."
-      >
+      <Chapter title="The parts" lede="What each part does, how it is checked, and what you control.">
         <div>
-          {MODELS.map((m) => (
+          {PARTS.map((m) => (
             <article key={m.title} className="grid gap-x-12 gap-y-4 border-b border-rule py-9 first:pt-0 lg:grid-cols-12">
               <div className="lg:col-span-4">
                 <h3 className="text-[1.15rem] font-semibold tracking-[-0.015em] text-ink">{m.title}</h3>
@@ -78,11 +79,8 @@ export default function HowItWorksPage() {
         </div>
       </Chapter>
 
-      <Chapter
-        title="Decisions come with scenarios"
-        lede="The branch evaluation never gives a single number. Every answer arrives as conservative, base and optimistic cases, with the risk in each and the assumptions that would change it."
-      >
-        <Actions link={{ href: "/features", label: "See every module" }} />
+      <Chapter title="One login, one role" lede="Each person signs in with their own email, phone or username. That login belongs to one business and one role, so nobody chooses a role at the door, and each sees only what their role can open.">
+        <Actions link={{ href: "/features", label: "See everything it does" }} />
       </Chapter>
     </>
   );
